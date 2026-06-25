@@ -23,10 +23,9 @@
       color: #333;
     }
 
-    /* HEADER */
     header {
       display: flex;
-      flex-direction: row; /* FORCE 1 BARIS */
+      flex-direction: row;
       justify-content: space-between;
       align-items: center;
       padding: 15px 20px;
@@ -56,7 +55,6 @@
       color: #e60023;
     }
 
-    /* HERO */
     .hero {
       display: flex;
       flex-direction: column;
@@ -97,13 +95,11 @@
       color: #e60023;
     }
 
-    /* 🔥 LOGO DIPERBESAR */
     .hero img {
       width: 260px;
       margin: 30px auto 0;
     }
 
-    /* FEATURES */
     .features {
       text-align: center;
       padding: 50px 20px;
@@ -120,8 +116,9 @@
     }
 
     .feature {
-      max-width: 250px;
-      margin: auto;
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
     }
 
     footer {
@@ -131,7 +128,6 @@
       margin-top: 40px;
     }
 
-    /* DESKTOP */
     @media (min-width: 768px) {
 
       header {
@@ -167,7 +163,6 @@
         margin-right: 10px;
       }
 
-      /* 🔥 LEBIH BESAR DI DESKTOP */
       .hero img {
         width: 400px;
         margin: 0;
@@ -175,8 +170,16 @@
 
       .feature-box {
         flex-direction: row;
-        justify-content: center;
-        gap: 40px;
+        justify-content: space-between;
+        align-items: stretch;
+        gap: 30px;
+      }
+
+      .feature {
+        flex: 1;
+        max-width: none;
+        margin: 0;
+        padding: 0 10px;
       }
     }
 
