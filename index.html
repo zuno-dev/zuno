@@ -5,12 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ZUNO - Tutor Mandarin</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
-
   <style>
+    /* FONT CUSTOM */
+    @font-face {
+      font-family: 'Arista';
+      src: url('aristapro.ttf') format('truetype');
+    }
+
     * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
       font-family: 'Segoe UI', sans-serif;
     }
 
@@ -19,25 +24,26 @@
       color: #333;
     }
 
+    /* HEADER */
     header {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
-      padding: 20px 50px;
+      padding: 15px;
       background: white;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
     .logo {
-      font-family: 'Comfortaa', sans-serif;
-      font-size: 28px;
-      font-weight: bold;
+      font-family: 'Arista', sans-serif;
+      font-size: 26px;
       color: #e60023;
       letter-spacing: 2px;
+      margin-bottom: 10px;
     }
 
     .nav a {
-      margin-left: 20px;
+      margin: 0 10px;
       text-decoration: none;
       color: #333;
       font-weight: 500;
@@ -47,36 +53,38 @@
       color: #e60023;
     }
 
+    /* HERO */
     .hero {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 80px 50px;
+      flex-direction: column;
+      text-align: center;
+      padding: 40px 20px;
     }
 
     .hero-text {
-      max-width: 500px;
+      max-width: 100%;
     }
 
     .hero h1 {
-      font-size: 42px;
+      font-size: 28px;
       margin-bottom: 15px;
     }
 
     .hero p {
-      font-size: 18px;
+      font-size: 16px;
       color: #555;
       margin-bottom: 25px;
     }
 
     .btn {
-      padding: 12px 25px;
+      width: 100%;
+      padding: 12px;
       border: none;
       background: #e60023;
       color: white;
       border-radius: 6px;
       cursor: pointer;
-      margin-right: 10px;
+      margin-bottom: 10px;
       font-weight: bold;
     }
 
@@ -87,12 +95,14 @@
     }
 
     .hero img {
-      width: 250px; /* diperkecil karena ini logo */
+      width: 180px;
+      margin: 20px auto 0;
     }
 
+    /* FEATURES */
     .features {
       text-align: center;
-      padding: 60px 20px;
+      padding: 50px 20px;
     }
 
     .features h2 {
@@ -101,21 +111,74 @@
 
     .feature-box {
       display: flex;
-      justify-content: center;
-      gap: 40px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 20px;
     }
 
     .feature {
-      max-width: 200px;
+      max-width: 250px;
+      margin: auto;
     }
 
     footer {
       text-align: center;
       padding: 20px;
       background: white;
-      margin-top: 50px;
+      margin-top: 40px;
     }
+
+    /* DESKTOP VERSION */
+    @media (min-width: 768px) {
+
+      header {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 20px 50px;
+      }
+
+      .logo {
+        margin-bottom: 0;
+        font-size: 28px;
+      }
+
+      .hero {
+        flex-direction: row;
+        text-align: left;
+        justify-content: space-between;
+        align-items: center;
+        padding: 80px 50px;
+      }
+
+      .hero-text {
+        max-width: 500px;
+      }
+
+      .hero h1 {
+        font-size: 42px;
+      }
+
+      .hero p {
+        font-size: 18px;
+      }
+
+      .btn {
+        width: auto;
+        margin-right: 10px;
+      }
+
+      .hero img {
+        width: 250px;
+        margin: 0;
+      }
+
+      .feature-box {
+        flex-direction: row;
+        justify-content: center;
+        gap: 40px;
+      }
+
+    }
+
   </style>
 </head>
 
