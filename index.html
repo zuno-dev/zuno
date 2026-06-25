@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZUNO - Tutor Mandarin</title>
+  <title>ZUNO - Mandarin Tutor</title>
 
   <style>
-    /* FONT CUSTOM */
     @font-face {
       font-family: 'Arista';
       src: url('aristapro.ttf') format('truetype');
@@ -27,9 +26,10 @@
     /* HEADER */
     header {
       display: flex;
-      flex-direction: column;
+      flex-direction: row; /* FORCE 1 BARIS */
+      justify-content: space-between;
       align-items: center;
-      padding: 15px;
+      padding: 15px 20px;
       background: white;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
@@ -39,11 +39,14 @@
       font-size: 26px;
       color: #e60023;
       letter-spacing: 2px;
-      margin-bottom: 10px;
+    }
+
+    .nav {
+      display: flex;
+      gap: 15px;
     }
 
     .nav a {
-      margin: 0 10px;
       text-decoration: none;
       color: #333;
       font-weight: 500;
@@ -94,9 +97,10 @@
       color: #e60023;
     }
 
+    /* 🔥 LOGO DIPERBESAR */
     .hero img {
-      width: 180px;
-      margin: 20px auto 0;
+      width: 260px;
+      margin: 30px auto 0;
     }
 
     /* FEATURES */
@@ -127,17 +131,14 @@
       margin-top: 40px;
     }
 
-    /* DESKTOP VERSION */
+    /* DESKTOP */
     @media (min-width: 768px) {
 
       header {
-        flex-direction: row;
-        justify-content: space-between;
         padding: 20px 50px;
       }
 
       .logo {
-        margin-bottom: 0;
         font-size: 28px;
       }
 
@@ -166,8 +167,9 @@
         margin-right: 10px;
       }
 
+      /* 🔥 LEBIH BESAR DI DESKTOP */
       .hero img {
-        width: 250px;
+        width: 400px;
         margin: 0;
       }
 
@@ -176,7 +178,6 @@
         justify-content: center;
         gap: 40px;
       }
-
     }
 
   </style>
@@ -194,36 +195,36 @@
 
 <section class="hero">
   <div class="hero-text">
-    <h1>Temukan Tutor Mandarin Terbaik</h1>
+    <h1>Find the Best Mandarin Tutor</h1>
     <p>
-      Belajar Mandarin jadi lebih mudah dengan tutor profesional,
-      fleksibel, dan sesuai kebutuhanmu.
+      Learning Mandarin is easier with professional tutors,
+      flexible scheduling, and lessons tailored to your needs.
     </p>
 
-    <button class="btn">Mulai Sekarang</button>
-    <button class="btn btn-secondary">Daftar</button>
+    <button class="btn">Get Started</button>
+    <button class="btn btn-secondary">Sign Up</button>
   </div>
 
-  <img src="logo_zuno.png" alt="Logo ZUNO">
+  <img src="logo_zuno.png" alt="ZUNO Logo">
 </section>
 
 <section class="features">  
-  <h2>Kenapa ZUNO?</h2>
+  <h2>Why ZUNO?</h2>
 
   <div class="feature-box">
     <div class="feature">
-      <h3>🎓 Tutor Profesional</h3>
-      <p>Belajar dengan pengajar berpengalaman</p>
+      <h3>🎓 Professional Tutors</h3>
+      <p>Learn from experienced instructors</p>
     </div>
 
     <div class="feature">
-      <h3>⏰ Fleksibel</h3>
-      <p>Atur jadwal sesuai waktu kamu</p>
+      <h3>⏰ Flexible</h3>
+      <p>Set your own learning schedule</p>
     </div>
 
     <div class="feature">
       <h3>📍 Online</h3>
-      <p>Belajar dari mana saja</p>
+      <p>Learn from anywhere</p>
     </div>
   </div>
 </section>
