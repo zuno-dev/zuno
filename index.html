@@ -61,24 +61,23 @@
       color: #e60023;
     }
 
-    /* Tampilan Halaman (Views) */
+    
     .view {
-      display: none; /* Sembunyikan semua halaman secara default */
+      display: none; 
     }
 
     .view.active-block {
-      display: block; /* Tampilkan halaman home */
+      display: block; 
     }
 
     .view.active-flex {
-      display: flex; /* Tampilkan halaman login/register dengan flexbox agar ke tengah */
+      display: flex; 
       justify-content: center;
       align-items: center;
       flex: 1;
       padding: 40px 20px;
     }
 
-    /* Hero Section */
     .hero {
       display: flex;
       flex-direction: column;
@@ -134,7 +133,7 @@
       margin: 30px auto 0;
     }
 
-    /* Features Section */
+    
     .features {
       text-align: center;
       padding: 50px 20px;
@@ -156,7 +155,7 @@
       margin: 0 auto;
     }
 
-    /* Auth Styling (Login & Register) */
+    
     .auth-card {
       background: white;
       padding: 30px;
@@ -215,16 +214,16 @@
       text-decoration: underline;
     }
 
-    /* Footer */
+    
     footer {
       text-align: center;
       padding: 20px;
       background: white;
-      margin-top: auto; /* Memastikan footer tetap di bawah jika konten sedikit */
+      margin-top: auto; 
       box-shadow: 0 -2px 5px rgba(0,0,0,0.02);
     }
 
-    /* Responsive Desktop */
+    
     @media (min-width: 768px) {
       header {
         padding: 20px 50px;
@@ -369,12 +368,12 @@
 
 <script>
   function navigateTo(page) {
-    // Sembunyikan semua halaman terlebih dahulu dengan menghapus class aktif
+    
     document.getElementById('home-page').className = 'view';
     document.getElementById('login-page').className = 'view';
     document.getElementById('register-page').className = 'view';
 
-    // Tampilkan halaman yang dituju berdasarkan parameter
+    
     if (page === 'home') {
       document.getElementById('home-page').className = 'view active-block';
     } else if (page === 'login') {
@@ -383,7 +382,7 @@
       document.getElementById('register-page').className = 'view active-flex';
     }
     
-    // Gulir otomatis ke atas setiap kali berganti halaman
+    
     window.scrollTo(0, 0);
   }
 </script>
