@@ -1,382 +1,391 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZUNO - Mandarin Tutor</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZUNO - Mandarin Tutor</title>
 
-  <style>
-    @font-face {
-      font-family: 'Arista';
-      src: url('aristapro.ttf') format('truetype');
-    }
+  <style>
+    @font-face {
+      font-family: 'Arista';
+      src: url('aristapro.ttf') format('truetype');
+    }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
 
-    body {
-      background: #f9fafb;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
+    body {
+      background: #f9fafb;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-    header {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 20px;
-      background: white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
+    header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
 
-    .logo {
-      font-family: 'Arista', sans-serif;
-      font-size: 26px;
-      color: #e60023;
-      letter-spacing: 2px;
-      cursor: pointer;
-      text-decoration: none;
-    }
+    .logo {
+      font-family: 'Arista', sans-serif;
+      font-size: 26px;
+      color: #e60023;
+      letter-spacing: 2px;
+      cursor: pointer;
+      text-decoration: none;
+    }
 
-    .nav {
-      display: flex;
-      gap: 15px;
-    }
+    .nav {
+      display: flex;
+      gap: 15px;
+    }
 
-    .nav a {
-      text-decoration: none;
-      color: #333;
-      font-weight: 500;
-      transition: color 0.3s ease;
-    }
+    .nav a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
 
-    .nav a:hover {
-      color: #e60023;
-    }
+    .nav a:hover {
+      color: #e60023;
+    }
 
-    .view {
-      display: none; 
-    }
+    /* Tampilan Halaman (Views) */
+    .view {
+      display: none; /* Sembunyikan semua halaman secara default */
+    }
 
-    .view.active-block {
-      display: block;
-    }
+    .view.active-block {
+      display: block; /* Tampilkan halaman home */
+    }
 
-    .view.active-flex {
-      display: flex; 
-      justify-content: center;
-      align-items: center;
-      flex: 1;
-      padding: 40px 20px;
-    }
+    .view.active-flex {
+      display: flex; /* Tampilkan halaman login/register dengan flexbox agar ke tengah */
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+      padding: 40px 20px;
+    }
 
-    .hero {
-      display: flex;
-      flex-direction: column;
-      text-align: center;
-      padding: 40px 20px;
-    }
+    /* Hero Section */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      padding: 40px 20px;
+    }
 
-    .hero-text {
-      max-width: 100%;
-    }
+    .hero-text {
+      max-width: 100%;
+    }
 
-    .hero h1 {
-      font-size: 28px;
-      margin-bottom: 15px;
-    }
+    .hero h1 {
+      font-size: 28px;
+      margin-bottom: 15px;
+    }
 
-    .hero p {
-      font-size: 16px;
-      color: #555;
-      margin-bottom: 25px;
-    }
+    .hero p {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 25px;
+    }
 
-    .btn {
-      width: 100%;
-      padding: 12px 25px;
-      border: none;
-      background: #e60023;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-bottom: 10px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
+    .btn {
+      width: 100%;
+      padding: 12px 25px;
+      border: none;
+      background: #e60023;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
 
-    .btn:hover {
-      background: #b8001c;
-    }
+    .btn:hover {
+      background: #b8001c;
+    }
 
-    .btn-secondary {
-      background: transparent;
-      border: 2px solid #e60023;
-      color: #e60023;
-    }
+    .btn-secondary {
+      background: transparent;
+      border: 2px solid #e60023;
+      color: #e60023;
+    }
 
-    .btn-secondary:hover {
-      background: #e60023;
-      color: white;
-    }
+    .btn-secondary:hover {
+      background: #e60023;
+      color: white;
+    }
 
-    .hero img {
-      width: 260px;
-      margin: 30px auto 0;
-    }
+    .hero img {
+      width: 260px;
+      margin: 30px auto 0;
+    }
 
-    .features {
-      text-align: center;
-      padding: 50px 20px;
-    }
+    /* Features Section */
+    .features {
+      text-align: center;
+      padding: 50px 20px;
+    }
 
-    .features h2 {
-      margin-bottom: 30px;
-    }
+    .features h2 {
+      margin-bottom: 30px;
+    }
 
-    .feature-box {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
+    .feature-box {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
 
-    .feature {
-      width: 100%;
-      max-width: 300px;
-      margin: 0 auto;
-    }
+    .feature {
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+    }
 
-    .auth-card {
-      background: white;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-      width: 100%;
-      max-width: 400px;
-    }
+    /* Auth Styling (Login & Register) */
+    .auth-card {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      width: 100%;
+      max-width: 400px;
+    }
 
-    .auth-card h2 {
-      margin-bottom: 20px;
-      color: #333;
-      text-align: center;
-    }
+    .auth-card h2 {
+      margin-bottom: 20px;
+      color: #333;
+      text-align: center;
+    }
 
-    .form-group {
-      margin-bottom: 15px;
-    }
+    .form-group {
+      margin-bottom: 15px;
+    }
 
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #666;
-    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+    }
 
-    .form-group input {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.3s ease;
-    }
+    .form-group input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
 
-    .form-group input:focus {
-      border-color: #e60023;
-    }
+    .form-group input:focus {
+      border-color: #e60023;
+    }
 
-    .auth-card p {
-      margin-top: 15px;
-      text-align: center;
-      font-size: 14px;
-      color: #666;
-    }
+    .auth-card p {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+    }
 
-    .auth-card p a {
-      color: #e60023;
-      text-decoration: none;
-      font-weight: bold;
-    }
+    .auth-card p a {
+      color: #e60023;
+      text-decoration: none;
+      font-weight: bold;
+    }
 
-    .auth-card p a:hover {
-      text-decoration: underline;
-    }
+    .auth-card p a:hover {
+      text-decoration: underline;
+    }
 
-    footer {
-      text-align: center;
-      padding: 20px;
-      background: white;
-      margin-top: auto; 
-      box-shadow: 0 -2px 5px rgba(0,0,0,0.02);
-    }
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: white;
+      margin-top: auto; /* Memastikan footer tetap di bawah jika konten sedikit */
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.02);
+    }
 
-    @media (min-width: 768px) {
-      header {
-        padding: 20px 50px;
-      }
+    /* Responsive Desktop */
+    @media (min-width: 768px) {
+      header {
+        padding: 20px 50px;
+      }
 
-      .logo {
-        font-size: 28px;
-      }
+      .logo {
+        font-size: 28px;
+      }
 
-      .hero {
-        flex-direction: row;
-        text-align: left;
-        justify-content: space-between;
-        align-items: center;
-        padding: 80px 50px;
-      }
+      .hero {
+        flex-direction: row;
+        text-align: left;
+        justify-content: space-between;
+        align-items: center;
+        padding: 80px 50px;
+      }
 
-      .hero-text {
-        max-width: 500px;
-      }
+      .hero-text {
+        max-width: 500px;
+      }
 
-      .hero h1 {
-        font-size: 42px;
-      }
+      .hero h1 {
+        font-size: 42px;
+      }
 
-      .hero p {
-        font-size: 18px;
-      }
+      .hero p {
+        font-size: 18px;
+      }
 
-      .btn {
-        width: auto;
-        margin-right: 10px;
-      }
+      .btn {
+        width: auto;
+        margin-right: 10px;
+      }
 
-      .hero img {
-        width: 400px;
-        margin: 0;
-      }
+      .hero img {
+        width: 400px;
+        margin: 0;
+      }
 
-      .feature-box {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: stretch;
-        gap: 30px;
-      }
+      .feature-box {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: stretch;
+        gap: 30px;
+      }
 
-      .feature {
-        flex: 1;
-        max-width: none;
-        margin: 0;
-        padding: 0 10px;
-      }
-    }
-  </style>
+      .feature {
+        flex: 1;
+        max-width: none;
+        margin: 0;
+        padding: 0 10px;
+      }
+    }
+  </style>
 </head>
 <body>
 
 <header>
-  <a href="#" class="logo" onclick="navigateTo('home')">ZUNO</a>
-  <div class="nav">
-    <a href="#" onclick="navigateTo('login')">Login</a>
-    <a href="#" onclick="navigateTo('register')">Register</a>
-  </div>
+  <a href="#" class="logo" onclick="navigateTo('home')">ZUNO</a>
+  <div class="nav">
+    <a href="#" onclick="navigateTo('login')">Login</a>
+    <a href="#" onclick="navigateTo('register')">Register</a>
+  </div>
 </header>
 
 <main id="home-page" class="view active-block">
-  <section class="hero">
-    <div class="hero-text">
-      <h1>Find the Best Mandarin Tutor</h1>
-      <p>
-        Learning Mandarin is easier with professional tutors,
-        flexible scheduling, and lessons tailored to your needs.
-      </p>
-      <button class="btn" onclick="navigateTo('login')">Login</button>
-      <button class="btn btn-secondary" onclick="navigateTo('register')">Sign Up</button>
-    </div>
-    <img src="logo_zuno.png" alt="ZUNO Logo">
-  </section>
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Find the Best Mandarin Tutor</h1>
+      <p>
+        Learning Mandarin is easier with professional tutors,
+        flexible scheduling, and lessons tailored to your needs.
+      </p>
+      <button class="btn" onclick="navigateTo('login')">Login</button>
+      <button class="btn btn-secondary" onclick="navigateTo('register')">Sign Up</button>
+    </div>
+    <img src="logo_zuno.png" alt="ZUNO Logo">
+  </section>
 
-  <section class="features">  
-    <h2>Why ZUNO?</h2>
-    <div class="feature-box">
-      <div class="feature">
-        <h3>🎓 Professional Tutors</h3>
-        <p>Learn from experienced instructors</p>
-      </div>
-      <div class="feature">
-        <h3>⏰ Flexible</h3>
-        <p>Set your own learning schedule</p>
-      </div>
-      <div class="feature">
-        <h3>📍 Online</h3>
-        <p>Learn from anywhere</p>
-      </div>
-    </div>
-  </section>
+  <section class="features">  
+    <h2>Why ZUNO?</h2>
+    <div class="feature-box">
+      <div class="feature">
+        <h3>🎓 Professional Tutors</h3>
+        <p>Learn from experienced instructors</p>
+      </div>
+      <div class="feature">
+        <h3>⏰ Flexible</h3>
+        <p>Set your own learning schedule</p>
+      </div>
+      <div class="feature">
+        <h3>📍 Online</h3>
+        <p>Learn from anywhere</p>
+      </div>
+    </div>
+  </section>
 </main>
 
 <section id="login-page" class="view">
-  <div class="auth-card">
-    <h2>Login to ZUNO</h2>
-    <form onsubmit="event.preventDefault(); alert('Success');">
-      <div class="form-group">
-        <label for="login-email">Email Address</label>
-        <input type="email" id="login-email" placeholder="Enter your email" required>
-      </div>
-      <div class="form-group">
-        <label for="login-password">Password</label>
-        <input type="password" id="login-password" placeholder="Enter your password" required>
-      </div>
-      <button type="submit" class="btn">Sign In</button>
-    </form>
-    <p>Don't have an account? <a href="#" onclick="navigateTo('register')">Register here</a></p>
-  </div>
+  <div class="auth-card">
+    <h2>Login to ZUNO</h2>
+    <form onsubmit="event.preventDefault(); alert('Fungsi login frontend sukses!');">
+      <div class="form-group">
+        <label for="login-email">Email Address</label>
+        <input type="email" id="login-email" placeholder="Enter your email" required>
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="Enter your password" required>
+      </div>
+      <button type="submit" class="btn">Sign In</button>
+    </form>
+    <p>Don't have an account? <a href="#" onclick="navigateTo('register')">Register here</a></p>
+  </div>
 </section>
 
 <section id="register-page" class="view">
-  <div class="auth-card">
-    <h2>Create Account</h2>
-    <form onsubmit="event.preventDefault(); alert('Success');">
-      <div class="form-group">
-        <label for="reg-name">Full Name</label>
-        <input type="text" id="reg-name" placeholder="Enter your full name" required>
-      </div>
-      <div class="form-group">
-        <label for="reg-email">Email Address</label>
-        <input type="email" id="reg-email" placeholder="Enter your email" required>
-      </div>
-      <div class="form-group">
-        <label for="reg-password">Password</label>
-        <input type="password" id="reg-password" placeholder="Create a password" required>
-      </div>
-      <button type="submit" class="btn">Sign Up</button>
-    </form>
-    <p>Already have an account? <a href="#" onclick="navigateTo('login')">Login here</a></p>
-  </div>
+  <div class="auth-card">
+    <h2>Create Account</h2>
+    <form onsubmit="event.preventDefault(); alert('Fungsi register frontend sukses!');">
+      <div class="form-group">
+        <label for="reg-name">Full Name</label>
+        <input type="text" id="reg-name" placeholder="Enter your full name" required>
+      </div>
+      <div class="form-group">
+        <label for="reg-email">Email Address</label>
+        <input type="email" id="reg-email" placeholder="Enter your email" required>
+      </div>
+      <div class="form-group">
+        <label for="reg-password">Password</label>
+        <input type="password" id="reg-password" placeholder="Create a password" required>
+      </div>
+      <button type="submit" class="btn">Sign Up</button>
+    </form>
+    <p>Already have an account? <a href="#" onclick="navigateTo('login')">Login here</a></p>
+  </div>
 </section>
 
 <footer>
-  <p>© 2026 ZUNO</p>
+  <p>© 2026 ZUNO</p>
 </footer>
 
 <script>
-  function navigateTo(page) {
-    document.getElementById('home-page').className = 'view';
-    document.getElementById('login-page').className = 'view';
-    document.getElementById('register-page').className = 'view';
+  function navigateTo(page) {
+    // Sembunyikan semua halaman terlebih dahulu dengan menghapus class aktif
+    document.getElementById('home-page').className = 'view';
+    document.getElementById('login-page').className = 'view';
+    document.getElementById('register-page').className = 'view';
 
-    if (page === 'home') {
-      document.getElementById('home-page').className = 'view active-block';
-    } else if (page === 'login') {
-      document.getElementById('login-page').className = 'view active-flex';
-    } else if (page === 'register') {
-      document.getElementById('register-page').className = 'view active-flex';
-    }
-    
-    window.scrollTo(0, 0);
-  }
+    // Tampilkan halaman yang dituju berdasarkan parameter
+    if (page === 'home') {
+      document.getElementById('home-page').className = 'view active-block';
+    } else if (page === 'login') {
+      document.getElementById('login-page').className = 'view active-flex';
+    } else if (page === 'register') {
+      document.getElementById('register-page').className = 'view active-flex';
+    }
+    
+    // Gulir otomatis ke atas setiap kali berganti halaman
+    window.scrollTo(0, 0);
+  }
 </script>
 
 </body>
