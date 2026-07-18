@@ -653,6 +653,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCsUZbm8Lam7PA-xDa_un2zttqPtFnTMjg",
@@ -666,12 +667,14 @@
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const db = getFirestore(app);
 
   window.eggQuota = 2;
   window.vouchers = [];
   window.currentUserUid = null;
   window.userProfile = {};
   window.currentUserEmail = "";
+  let unsubSnapshot = null;
 
   window.togglePassword = (inputId, iconElement) => {
     const input = document.getElementById(inputId);
@@ -684,22 +687,24 @@
     }
   };
 
-  window.crackEgg = () => {
+  window.crackEgg = async () => {
     if (window.eggQuota > 0) {
       const amounts = [1, 10, 100];
       const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
       const voucherText = randomAmount + " Rupiah Voucher";
       
-      window.vouchers.push(voucherText);
-      window.eggQuota = Math.max(0, 2 - window.vouchers.length);
+      const newVouchers = [...window.vouchers, voucherText];
+      const newQuota = Math.max(0, 2 - newVouchers.length);
       
       if (window.currentUserUid) {
-        localStorage.setItem('zuno_vouchers_' + window.currentUserUid, JSON.stringify(window.vouchers));
+        const docRef = doc(db, "users", window.currentUserUid);
+        await updateDoc(docRef, {
+          vouchers: newVouchers,
+          quota: newQuota
+        }).catch(()=>{});
       }
       
-      window.updateEggUI();
       document.getElementById('egg-result').innerText = "Congratulations! You got a " + voucherText + "!";
-      window.updateVoucherList();
     }
   };
 
@@ -743,9 +748,9 @@
     document.getElementById('edit-email').value = window.currentUserEmail || "";
   };
 
-  window.handleEditProfile = (event) => {
+  window.handleEditProfile = async (event) => {
     event.preventDefault();
-    window.userProfile = {
+    const updatedProfile = {
       fullName: document.getElementById('edit-fullname').value,
       nickname: document.getElementById('edit-nickname').value,
       dob: document.getElementById('edit-dob').value,
@@ -756,16 +761,16 @@
     };
     
     if (window.currentUserUid) {
-      localStorage.setItem('zuno_profile_' + window.currentUserUid, JSON.stringify(window.userProfile));
+      const docRef = doc(db, "users", window.currentUserUid);
+      await updateDoc(docRef, { profile: updatedProfile }).catch(()=>{});
       
-      if (auth.currentUser && window.userProfile.fullName) {
+      if (auth.currentUser && updatedProfile.fullName) {
         updateProfile(auth.currentUser, {
-          displayName: window.userProfile.fullName
+          displayName: updatedProfile.fullName
         }).catch(()=>{});
       }
     }
     
-    window.updateWelcomeText();
     window.navigateTo('profile');
   };
 
@@ -853,22 +858,29 @@
       window.currentUserUid = user.uid;
       window.currentUserEmail = user.email;
       
-      const savedProfile = localStorage.getItem('zuno_profile_' + user.uid);
-      window.userProfile = savedProfile ? JSON.parse(savedProfile) : {};
-      
-      if (!window.userProfile.fullName) {
-        window.userProfile.fullName = user.displayName || "";
-      }
-      
-      window.updateWelcomeText();
-
-      const savedVouchers = localStorage.getItem('zuno_vouchers_' + user.uid);
-      window.vouchers = savedVouchers ? JSON.parse(savedVouchers) : [];
-      window.eggQuota = Math.max(0, 2 - window.vouchers.length);
-
-      window.updateEggUI();
-      window.updateVoucherList();
-      document.getElementById('egg-result').innerText = "";
+      const docRef = doc(db, "users", user.uid);
+      unsubSnapshot = onSnapshot(docRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          window.userProfile = data.profile || {};
+          window.vouchers = data.vouchers || [];
+          window.eggQuota = data.quota !== undefined ? data.quota : 2;
+          
+          if (!window.userProfile.fullName) {
+            window.userProfile.fullName = user.displayName || "";
+          }
+          
+          window.updateWelcomeText();
+          window.updateEggUI();
+          window.updateVoucherList();
+        } else {
+          setDoc(docRef, {
+            profile: { fullName: user.displayName || "" },
+            vouchers: [],
+            quota: 2
+          }).catch(()=>{});
+        }
+      });
 
       const currentView = document.querySelector('.view.active-block, .view.active-flex');
       if (!currentView || currentView.id === 'loading-page' || currentView.id === 'landing-page' || currentView.id === 'login-page' || currentView.id === 'register-page') {
@@ -880,6 +892,11 @@
       window.userProfile = {};
       window.eggQuota = 2;
       window.vouchers = [];
+      
+      if (unsubSnapshot) {
+        unsubSnapshot();
+        unsubSnapshot = null;
+      }
       
       window.updateEggUI();
       window.updateVoucherList();
@@ -905,18 +922,17 @@
     }
     
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        return updateProfile(userCredential.user, {
-          displayName: name
-        }).then(() => {
-          const newProfile = { fullName: name };
-          localStorage.setItem('zuno_profile_' + userCredential.user.uid, JSON.stringify(newProfile));
+      .then(async (userCredential) => {
+        await updateProfile(userCredential.user, { displayName: name });
+        const docRef = doc(db, "users", userCredential.user.uid);
+        await setDoc(docRef, {
+          profile: { fullName: name },
+          vouchers: [],
+          quota: 2
         });
-      })
-      .then(() => {
-        signOut(auth).then(() => {
-          window.navigateTo('login');
-        });
+        
+        await signOut(auth);
+        window.navigateTo('login');
       })
       .catch((error) => {
         alert(error.message);
