@@ -496,14 +496,16 @@
 
   window.crackEgg = () => {
     if (window.eggQuota > 0) {
+      window.eggQuota--;
+      
       const amounts = [1, 10, 100];
       const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
       const voucherText = randomAmount + " Rupiah Voucher";
       
       window.vouchers.push(voucherText);
-      window.eggQuota = Math.max(0, 2 - window.vouchers.length);
       
       if (window.currentUserUid) {
+        localStorage.setItem('zuno_quota_' + window.currentUserUid, window.eggQuota);
         localStorage.setItem('zuno_vouchers_' + window.currentUserUid, JSON.stringify(window.vouchers));
       }
       
@@ -603,9 +605,11 @@
       const displayName = user.displayName || user.email.split('@')[0];
       document.getElementById('welcome-text').innerText = "Welcome, " + displayName;
 
+      const savedQuota = localStorage.getItem('zuno_quota_' + user.uid);
+      window.eggQuota = savedQuota !== null ? parseInt(savedQuota) : 2;
+
       const savedVouchers = localStorage.getItem('zuno_vouchers_' + user.uid);
       window.vouchers = savedVouchers ? JSON.parse(savedVouchers) : [];
-      window.eggQuota = Math.max(0, 2 - window.vouchers.length);
 
       window.updateEggUI();
       window.updateVoucherList();
