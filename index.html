@@ -653,7 +653,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-  import { getFirestore, doc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCsUZbm8Lam7PA-xDa_un2zttqPtFnTMjg",
@@ -687,24 +687,39 @@
     }
   };
 
-  window.crackEgg = async () => {
+  window.saveToLocalAndCloud = async () => {
+    if (!window.currentUserUid) return;
+    
+    const dataObj = {
+      profile: window.userProfile,
+      vouchers: window.vouchers,
+      quota: window.eggQuota
+    };
+    
+    localStorage.setItem('zuno_data_' + window.currentUserUid, JSON.stringify(dataObj));
+
+    try {
+      const docRef = doc(db, "users", window.currentUserUid);
+      await setDoc(docRef, dataObj, { merge: true });
+    } catch (error) {
+      console.warn("Firestore sync pending or failed:", error);
+    }
+  };
+
+  window.crackEgg = () => {
     if (window.eggQuota > 0) {
       const amounts = [1, 10, 100];
       const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
       const voucherText = randomAmount + " Rupiah Voucher";
       
-      const newVouchers = [...window.vouchers, voucherText];
-      const newQuota = Math.max(0, 2 - newVouchers.length);
-      
-      if (window.currentUserUid) {
-        const docRef = doc(db, "users", window.currentUserUid);
-        await updateDoc(docRef, {
-          vouchers: newVouchers,
-          quota: newQuota
-        }).catch(()=>{});
-      }
+      window.vouchers.push(voucherText);
+      window.eggQuota = Math.max(0, 2 - window.vouchers.length);
       
       document.getElementById('egg-result').innerText = "Congratulations! You got a " + voucherText + "!";
+      window.updateEggUI();
+      window.updateVoucherList();
+      
+      window.saveToLocalAndCloud();
     }
   };
 
@@ -748,9 +763,9 @@
     document.getElementById('edit-email').value = window.currentUserEmail || "";
   };
 
-  window.handleEditProfile = async (event) => {
+  window.handleEditProfile = (event) => {
     event.preventDefault();
-    const updatedProfile = {
+    window.userProfile = {
       fullName: document.getElementById('edit-fullname').value,
       nickname: document.getElementById('edit-nickname').value,
       dob: document.getElementById('edit-dob').value,
@@ -760,17 +775,14 @@
       phone: document.getElementById('edit-phone').value
     };
     
-    if (window.currentUserUid) {
-      const docRef = doc(db, "users", window.currentUserUid);
-      await updateDoc(docRef, { profile: updatedProfile }).catch(()=>{});
-      
-      if (auth.currentUser && updatedProfile.fullName) {
-        updateProfile(auth.currentUser, {
-          displayName: updatedProfile.fullName
-        }).catch(()=>{});
-      }
+    if (auth.currentUser && window.userProfile.fullName) {
+      updateProfile(auth.currentUser, {
+        displayName: window.userProfile.fullName
+      }).catch(()=>{});
     }
     
+    window.updateWelcomeText();
+    window.saveToLocalAndCloud();
     window.navigateTo('profile');
   };
 
@@ -858,29 +870,47 @@
       window.currentUserUid = user.uid;
       window.currentUserEmail = user.email;
       
-      const docRef = doc(db, "users", user.uid);
-      unsubSnapshot = onSnapshot(docRef, (docSnap) => {
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          window.userProfile = data.profile || {};
-          window.vouchers = data.vouchers || [];
-          window.eggQuota = data.quota !== undefined ? data.quota : 2;
-          
-          if (!window.userProfile.fullName) {
-            window.userProfile.fullName = user.displayName || "";
+      const localData = localStorage.getItem('zuno_data_' + user.uid);
+      if (localData) {
+        const parsed = JSON.parse(localData);
+        window.userProfile = parsed.profile || { fullName: user.displayName || "" };
+        window.vouchers = parsed.vouchers || [];
+        window.eggQuota = parsed.quota !== undefined ? parsed.quota : 2;
+      } else {
+        window.userProfile = { fullName: user.displayName || "" };
+        window.vouchers = [];
+        window.eggQuota = 2;
+      }
+
+      window.updateWelcomeText();
+      window.updateEggUI();
+      window.updateVoucherList();
+
+      try {
+        const docRef = doc(db, "users", user.uid);
+        unsubSnapshot = onSnapshot(docRef, (docSnap) => {
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            window.userProfile = data.profile || window.userProfile;
+            window.vouchers = data.vouchers || window.vouchers;
+            window.eggQuota = data.quota !== undefined ? data.quota : window.eggQuota;
+            
+            localStorage.setItem('zuno_data_' + user.uid, JSON.stringify({
+              profile: window.userProfile,
+              vouchers: window.vouchers,
+              quota: window.eggQuota
+            }));
+
+            window.updateWelcomeText();
+            window.updateEggUI();
+            window.updateVoucherList();
           }
-          
-          window.updateWelcomeText();
-          window.updateEggUI();
-          window.updateVoucherList();
-        } else {
-          setDoc(docRef, {
-            profile: { fullName: user.displayName || "" },
-            vouchers: [],
-            quota: 2
-          }).catch(()=>{});
-        }
-      });
+        }, (error) => {
+          console.warn("Firestore sync disabled due to permissions:", error);
+        });
+      } catch (e) {
+        console.warn("Firestore initialization skipped.");
+      }
 
       const currentView = document.querySelector('.view.active-block, .view.active-flex');
       if (!currentView || currentView.id === 'loading-page' || currentView.id === 'landing-page' || currentView.id === 'login-page' || currentView.id === 'register-page') {
@@ -924,13 +954,12 @@
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         await updateProfile(userCredential.user, { displayName: name });
-        const docRef = doc(db, "users", userCredential.user.uid);
-        await setDoc(docRef, {
-          profile: { fullName: name },
-          vouchers: [],
-          quota: 2
-        });
+        window.currentUserUid = userCredential.user.uid;
+        window.userProfile = { fullName: name };
+        window.vouchers = [];
+        window.eggQuota = 2;
         
+        await window.saveToLocalAndCloud();
         await signOut(auth);
         window.navigateTo('login');
       })
