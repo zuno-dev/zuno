@@ -340,13 +340,17 @@
 
 <header>
   <a href="#" class="logo" onclick="navigateTo('landing')">ZUNO</a>
-  <div class="nav" id="top-nav">
+  <div class="nav" id="top-nav" style="display: none;">
     <a href="#" onclick="navigateTo('login')">Login</a>
     <a href="#" onclick="navigateTo('register')">Register</a>
   </div>
 </header>
 
-<main id="landing-page" class="view active-block">
+<main id="loading-page" class="view active-flex">
+  <h2>Loading...</h2>
+</main>
+
+<main id="landing-page" class="view">
   <section class="hero">
     <div class="hero-text">
       <h1>Find the Best Mandarin Tutor</h1>
@@ -430,7 +434,7 @@
 <section id="event-page" class="view">
   <div class="auth-card" style="text-align: center;">
     <h2>Crack the Egg</h2>
-    <p id="egg-quota-text">You have 1 quota left to crack the egg.</p>
+    <p id="egg-quota-text"></p>
     <div class="egg-container">
       <div class="egg" onclick="crackEgg()" id="egg-element">🥚</div>
     </div>
@@ -465,13 +469,13 @@
   </a>
 </nav>
 
-<footer id="main-footer">
+<footer id="main-footer" style="display: none;">
   <p>© 2026 ZUNO</p>
 </footer>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCsUZbm8Lam7PA-xDa_un2zttqPtFnTMjg",
@@ -486,21 +490,41 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-  window.eggQuota = 1;
+  window.eggQuota = 2;
   window.vouchers = [];
+  window.currentUserUid = null;
 
   window.crackEgg = () => {
     if (window.eggQuota > 0) {
-      window.eggQuota--;
-      window.vouchers.push("Chigga Voucher");
+      const amounts = [1, 10, 100];
+      const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
+      const voucherText = randomAmount + " Rupiah Voucher";
       
-      document.getElementById('egg-element').innerText = "🎊";
-      document.getElementById('egg-quota-text').innerText = "You have 0 quota left to crack the egg.";
-      document.getElementById('egg-result').innerText = "Congratulations! You got a Chigga Voucher!";
+      window.vouchers.push(voucherText);
+      window.eggQuota = Math.max(0, 2 - window.vouchers.length);
       
+      if (window.currentUserUid) {
+        localStorage.setItem('zuno_vouchers_' + window.currentUserUid, JSON.stringify(window.vouchers));
+      }
+      
+      window.updateEggUI();
+      document.getElementById('egg-result').innerText = "Congratulations! You got a " + voucherText + "!";
       window.updateVoucherList();
     } else {
       alert("You have no quota left!");
+    }
+  };
+
+  window.updateEggUI = () => {
+    const eggElement = document.getElementById('egg-element');
+    const eggQuotaText = document.getElementById('egg-quota-text');
+    
+    if (window.eggQuota > 0) {
+      eggElement.innerText = "🥚";
+      eggQuotaText.innerText = "You have " + window.eggQuota + " quota(s) left to crack the egg.";
+    } else {
+      eggElement.innerText = "🎊";
+      eggQuotaText.innerText = "You have 0 quota left to crack the egg.";
     }
   };
 
@@ -530,7 +554,13 @@
       footer.style.display = 'none';
     }
 
-    if (page === 'landing') {
+    if (page === 'loading') {
+      document.getElementById('loading-page').className = 'view active-flex';
+      topNav.style.display = 'none';
+      bottomNav.className = 'bottom-nav';
+      footer.style.display = 'none';
+    }
+    else if (page === 'landing') {
       document.getElementById('landing-page').className = 'view active-block';
       topNav.style.display = 'flex'; 
       bottomNav.className = 'bottom-nav';
@@ -567,6 +597,40 @@
     window.scrollTo(0, 0);
   };
 
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      window.currentUserUid = user.uid;
+      const displayName = user.displayName || user.email.split('@')[0];
+      document.getElementById('welcome-text').innerText = "Welcome, " + displayName;
+
+      const savedVouchers = localStorage.getItem('zuno_vouchers_' + user.uid);
+      window.vouchers = savedVouchers ? JSON.parse(savedVouchers) : [];
+      window.eggQuota = Math.max(0, 2 - window.vouchers.length);
+
+      window.updateEggUI();
+      window.updateVoucherList();
+      document.getElementById('egg-result').innerText = "";
+
+      const currentView = document.querySelector('.view.active-block, .view.active-flex');
+      if (!currentView || currentView.id === 'loading-page' || currentView.id === 'landing-page' || currentView.id === 'login-page' || currentView.id === 'register-page') {
+        window.navigateTo('home');
+      }
+    } else {
+      window.currentUserUid = null;
+      window.eggQuota = 2;
+      window.vouchers = [];
+      
+      window.updateEggUI();
+      window.updateVoucherList();
+      document.getElementById('egg-result').innerText = "";
+      
+      const currentView = document.querySelector('.view.active-block, .view.active-flex');
+      if (currentView && (currentView.id === 'home-page' || currentView.id === 'event-page' || currentView.id === 'profile-page' || currentView.id === 'loading-page')) {
+        window.navigateTo('landing');
+      }
+    }
+  });
+
   window.handleRegister = (event) => {
     event.preventDefault();
     const name = document.getElementById('reg-name').value;
@@ -581,7 +645,9 @@
       })
       .then(() => {
         alert("Account created successfully!");
-        navigateTo('login');
+        signOut(auth).then(() => {
+          window.navigateTo('login');
+        });
       })
       .catch((error) => {
         alert("Error: " + error.message);
@@ -594,21 +660,13 @@
     const password = document.getElementById('login-password').value;
     
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        const displayName = user.displayName || email.split('@')[0];
-        document.getElementById('welcome-text').innerText = "Welcome, " + displayName;
-        navigateTo('home'); 
-      })
       .catch((error) => {
         alert("Error: " + error.message);
       });
   };
 
   window.logout = () => {
-    signOut(auth).then(() => {
-      navigateTo('landing'); 
-    }).catch((error) => {
+    signOut(auth).catch((error) => {
       alert("Error: " + error.message);
     });
   };
