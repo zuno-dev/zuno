@@ -209,6 +209,7 @@
 
     .form-group {
       margin-bottom: 15px;
+      text-align: left;
     }
 
     .form-group label {
@@ -219,7 +220,7 @@
       color: #666;
     }
 
-    .form-group input {
+    .form-group input, .form-group select {
       width: 100%;
       padding: 10px 12px;
       border: 1px solid #ddd;
@@ -227,10 +228,36 @@
       font-size: 14px;
       outline: none;
       transition: border-color 0.3s ease;
+      background: white;
     }
 
-    .form-group input:focus {
+    .form-group input:focus, .form-group select:focus {
       border-color: #e60023;
+    }
+    
+    .form-group input[readonly] {
+      background: #f0f0f0;
+      color: #888;
+      cursor: not-allowed;
+    }
+    
+    .password-wrapper {
+      position: relative;
+    }
+    
+    .password-wrapper input {
+      padding-right: 40px;
+    }
+    
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #666;
+      font-size: 16px;
+      user-select: none;
     }
 
     .auth-card p {
@@ -250,6 +277,74 @@
       text-decoration: underline;
     }
 
+    .event-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      cursor: pointer;
+      width: 100%;
+      transition: transform 0.2s ease;
+    }
+    
+    .event-card:active {
+      transform: scale(0.98);
+    }
+
+    .event-card-header {
+      background: #FACC15;
+      height: 45px;
+      width: 100%;
+    }
+
+    .event-card-body {
+      padding: 25px 20px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .profile-menu {
+      width: 100%;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+
+    .profile-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 20px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .profile-item:last-child {
+      border-bottom: none;
+    }
+
+    .profile-item:active {
+      background: #f9f9f9;
+    }
+
+    .profile-item-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .profile-arrow {
+      color: #aaa;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
     .egg-container {
       text-align: center;
       margin-top: 20px;
@@ -265,21 +360,14 @@
       transform: scale(0.9);
     }
 
-    .voucher-section {
-      margin-top: 20px;
-      border-top: 1px solid #ddd;
-      padding-top: 20px;
-      text-align: left;
-    }
-
     .voucher-item {
       background: #f0fdf4;
       border: 1px solid #bbf7d0;
       color: #166534;
-      padding: 10px;
-      border-radius: 6px;
-      margin-top: 10px;
-      font-weight: 500;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      font-weight: bold;
     }
 
     footer {
@@ -393,7 +481,10 @@
       </div>
       <div class="form-group">
         <label for="login-password">Password</label>
-        <input type="password" id="login-password" placeholder="Enter your password" required>
+        <div class="password-wrapper">
+          <input type="password" id="login-password" placeholder="Enter your password" required>
+          <span class="toggle-password" onclick="togglePassword('login-password', this)">👁️</span>
+        </div>
       </div>
       <button type="submit" class="btn">Sign In</button>
     </form>
@@ -415,7 +506,17 @@
       </div>
       <div class="form-group">
         <label for="reg-password">Password</label>
-        <input type="password" id="reg-password" placeholder="Create a password" required>
+        <div class="password-wrapper">
+          <input type="password" id="reg-password" placeholder="Create a password" required>
+          <span class="toggle-password" onclick="togglePassword('reg-password', this)">👁️</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="reg-confirm-password">Confirm Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="reg-confirm-password" placeholder="Confirm your password" required>
+          <span class="toggle-password" onclick="togglePassword('reg-confirm-password', this)">👁️</span>
+        </div>
       </div>
       <button type="submit" class="btn">Sign Up</button>
     </form>
@@ -425,34 +526,110 @@
 
 <main id="home-page" class="view">
   <section style="padding: 40px 20px; text-align: center;">
-    <h1 id="welcome-text" style="margin-bottom: 20px; color: #e60023;">Welcome, User</h1>
-    <h2>ZUNO Home</h2>
-    <p>Welcome! Here you will find a list of Mandarin tutors you can choose from.</p>
+    <h1 id="welcome-text" style="margin-bottom: 20px; color: #e60023;"></h1>
+    <p>Find your Mandarin tutor here.</p>
   </section>
 </main>
 
 <section id="event-page" class="view">
+  <div style="width: 100%; max-width: 400px; margin: 0 auto; padding: 20px;">
+    <h2 style="margin-bottom: 25px; text-align: center; color: #333;">Available Events</h2>
+    
+    <div class="event-card" onclick="navigateTo('crack-egg')">
+      <div class="event-card-header"></div>
+      <div class="event-card-body">
+        Crack the Egg
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="crack-egg-page" class="view">
   <div class="auth-card" style="text-align: center;">
+    <a href="#" onclick="navigateTo('event')" style="color:#e60023; text-decoration:none; font-weight:bold; display:block; margin-bottom:20px; text-align:left;">&lt; Back</a>
     <h2>Crack the Egg</h2>
-    <p id="egg-quota-text"></p>
+    <p id="egg-quota-text" style="font-weight: 500; margin-top: 10px;"></p>
     <div class="egg-container">
       <div class="egg" onclick="crackEgg()" id="egg-element">🥚</div>
     </div>
-    <p id="egg-result" style="margin-top: 15px; font-weight: bold; color: #e60023;"></p>
+    <p id="egg-result" style="margin-top: 15px; font-weight: bold; color: #e60023; min-height: 24px;"></p>
   </div>
 </section>
 
 <section id="profile-page" class="view">
-  <div class="auth-card">
-    <h2 style="margin-bottom: 15px;">My Profile</h2>
-    <p style="margin-bottom: 20px; text-align: center;">Your account settings are here.</p>
-    <button class="btn" onclick="logout()">Logout</button>
-
-    <div class="voucher-section">
-      <h3>My Vouchers</h3>
-      <div id="voucher-list">
-        <p style="color: #666; margin-top: 10px; font-size: 14px;">No vouchers available.</p>
+  <div style="width: 100%; max-width: 400px; margin: 0 auto; padding: 20px;">
+    <h2 style="margin-bottom: 25px; text-align: center; color: #333;">Profile</h2>
+    
+    <div class="profile-menu">
+      <div class="profile-item" onclick="navigateTo('edit-profile')">
+        <div class="profile-item-left">
+          <span>📝</span> Edit Profile
+        </div>
+        <div class="profile-arrow">&gt;</div>
       </div>
+      <div class="profile-item" onclick="navigateTo('vouchers')">
+        <div class="profile-item-left">
+          <span>🎟️</span> My Vouchers
+        </div>
+        <div class="profile-arrow">&gt;</div>
+      </div>
+    </div>
+
+    <button class="btn" onclick="logout()" style="margin-top: 10px;">Logout</button>
+  </div>
+</section>
+
+<section id="edit-profile-page" class="view">
+  <div class="auth-card">
+    <a href="#" onclick="navigateTo('profile')" style="color:#e60023; text-decoration:none; font-weight:bold; display:block; margin-bottom:20px;">&lt; Back</a>
+    <h2 style="margin-bottom: 20px;">Edit Profile</h2>
+    <form onsubmit="handleEditProfile(event)">
+      <div class="form-group">
+        <label for="edit-fullname">Full Name</label>
+        <input type="text" id="edit-fullname" required>
+      </div>
+      <div class="form-group">
+        <label for="edit-nickname">Nickname</label>
+        <input type="text" id="edit-nickname">
+      </div>
+      <div class="form-group">
+        <label for="edit-dob">Date of Birth</label>
+        <input type="date" id="edit-dob">
+      </div>
+      <div class="form-group">
+        <label for="edit-gender">Gender</label>
+        <select id="edit-gender">
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="edit-school">School</label>
+        <input type="text" id="edit-school">
+      </div>
+      <div class="form-group">
+        <label for="edit-city">Domicile City</label>
+        <input type="text" id="edit-city">
+      </div>
+      <div class="form-group">
+        <label for="edit-phone">Phone Number</label>
+        <input type="tel" id="edit-phone">
+      </div>
+      <div class="form-group">
+        <label for="edit-email">Email</label>
+        <input type="email" id="edit-email" readonly>
+      </div>
+      <button type="submit" class="btn">Save Profile</button>
+    </form>
+  </div>
+</section>
+
+<section id="vouchers-page" class="view">
+  <div class="auth-card">
+    <a href="#" onclick="navigateTo('profile')" style="color:#e60023; text-decoration:none; font-weight:bold; display:block; margin-bottom:20px;">&lt; Back</a>
+    <h2 style="margin-bottom: 20px;">My Vouchers</h2>
+    <div id="voucher-list">
     </div>
   </div>
 </section>
@@ -493,27 +670,36 @@
   window.eggQuota = 2;
   window.vouchers = [];
   window.currentUserUid = null;
+  window.userProfile = {};
+  window.currentUserEmail = "";
+
+  window.togglePassword = (inputId, iconElement) => {
+    const input = document.getElementById(inputId);
+    if (input.type === "password") {
+      input.type = "text";
+      iconElement.innerText = "🙈";
+    } else {
+      input.type = "password";
+      iconElement.innerText = "👁️";
+    }
+  };
 
   window.crackEgg = () => {
     if (window.eggQuota > 0) {
-      window.eggQuota--;
-      
       const amounts = [1, 10, 100];
       const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
       const voucherText = randomAmount + " Rupiah Voucher";
       
       window.vouchers.push(voucherText);
+      window.eggQuota = Math.max(0, 2 - window.vouchers.length);
       
       if (window.currentUserUid) {
-        localStorage.setItem('zuno_quota_' + window.currentUserUid, window.eggQuota);
         localStorage.setItem('zuno_vouchers_' + window.currentUserUid, JSON.stringify(window.vouchers));
       }
       
       window.updateEggUI();
       document.getElementById('egg-result').innerText = "Congratulations! You got a " + voucherText + "!";
       window.updateVoucherList();
-    } else {
-      alert("You have no quota left!");
     }
   };
 
@@ -523,20 +709,64 @@
     
     if (window.eggQuota > 0) {
       eggElement.innerText = "🥚";
-      eggQuotaText.innerText = "You have " + window.eggQuota + " quota(s) left to crack the egg.";
     } else {
       eggElement.innerText = "🎊";
-      eggQuotaText.innerText = "You have 0 quota left to crack the egg.";
     }
+    eggQuotaText.innerText = "Remaining egg: " + window.eggQuota;
   };
 
   window.updateVoucherList = () => {
     const list = document.getElementById('voucher-list');
     if (window.vouchers.length === 0) {
-      list.innerHTML = '<p style="color: #666; margin-top: 10px; font-size: 14px;">No vouchers available.</p>';
+      list.innerHTML = '<p style="color: #888; text-align: center; margin-top: 20px; font-size: 15px;">No vouchers available.</p>';
     } else {
       list.innerHTML = window.vouchers.map(v => `<div class="voucher-item">${v}</div>`).join('');
     }
+  };
+
+  window.updateWelcomeText = () => {
+    const nickname = window.userProfile.nickname;
+    const fullName = window.userProfile.fullName || "";
+    const firstName = fullName.trim().split(' ')[0] || "User";
+    const display = nickname ? nickname : firstName;
+    document.getElementById('welcome-text').innerText = "Welcome, " + display;
+  };
+
+  window.populateProfileForm = () => {
+    document.getElementById('edit-fullname').value = window.userProfile.fullName || "";
+    document.getElementById('edit-nickname').value = window.userProfile.nickname || "";
+    document.getElementById('edit-dob').value = window.userProfile.dob || "";
+    document.getElementById('edit-gender').value = window.userProfile.gender || "";
+    document.getElementById('edit-school').value = window.userProfile.school || "";
+    document.getElementById('edit-city').value = window.userProfile.city || "";
+    document.getElementById('edit-phone').value = window.userProfile.phone || "";
+    document.getElementById('edit-email').value = window.currentUserEmail || "";
+  };
+
+  window.handleEditProfile = (event) => {
+    event.preventDefault();
+    window.userProfile = {
+      fullName: document.getElementById('edit-fullname').value,
+      nickname: document.getElementById('edit-nickname').value,
+      dob: document.getElementById('edit-dob').value,
+      gender: document.getElementById('edit-gender').value,
+      school: document.getElementById('edit-school').value,
+      city: document.getElementById('edit-city').value,
+      phone: document.getElementById('edit-phone').value
+    };
+    
+    if (window.currentUserUid) {
+      localStorage.setItem('zuno_profile_' + window.currentUserUid, JSON.stringify(window.userProfile));
+      
+      if (auth.currentUser && window.userProfile.fullName) {
+        updateProfile(auth.currentUser, {
+          displayName: window.userProfile.fullName
+        }).catch(()=>{});
+      }
+    }
+    
+    window.updateWelcomeText();
+    window.navigateTo('profile');
   };
 
   window.navigateTo = (page) => {
@@ -584,13 +814,32 @@
       document.getElementById('nav-home').className = 'active-link';
     } 
     else if (page === 'event') {
-      document.getElementById('event-page').className = 'view active-flex';
+      document.getElementById('event-page').className = 'view active-block';
+      topNav.style.display = 'none';
+      bottomNav.className = 'bottom-nav active';
+      document.getElementById('nav-event').className = 'active-link';
+    }
+    else if (page === 'crack-egg') {
+      document.getElementById('crack-egg-page').className = 'view active-flex';
       topNav.style.display = 'none';
       bottomNav.className = 'bottom-nav active';
       document.getElementById('nav-event').className = 'active-link';
     }
     else if (page === 'profile') {
-      document.getElementById('profile-page').className = 'view active-flex';
+      document.getElementById('profile-page').className = 'view active-block';
+      topNav.style.display = 'none';
+      bottomNav.className = 'bottom-nav active';
+      document.getElementById('nav-profile').className = 'active-link';
+    }
+    else if (page === 'edit-profile') {
+      window.populateProfileForm();
+      document.getElementById('edit-profile-page').className = 'view active-flex';
+      topNav.style.display = 'none';
+      bottomNav.className = 'bottom-nav active';
+      document.getElementById('nav-profile').className = 'active-link';
+    }
+    else if (page === 'vouchers') {
+      document.getElementById('vouchers-page').className = 'view active-flex';
       topNav.style.display = 'none';
       bottomNav.className = 'bottom-nav active';
       document.getElementById('nav-profile').className = 'active-link';
@@ -602,14 +851,20 @@
   onAuthStateChanged(auth, (user) => {
     if (user) {
       window.currentUserUid = user.uid;
-      const displayName = user.displayName || user.email.split('@')[0];
-      document.getElementById('welcome-text').innerText = "Welcome, " + displayName;
-
-      const savedQuota = localStorage.getItem('zuno_quota_' + user.uid);
-      window.eggQuota = savedQuota !== null ? parseInt(savedQuota) : 2;
+      window.currentUserEmail = user.email;
+      
+      const savedProfile = localStorage.getItem('zuno_profile_' + user.uid);
+      window.userProfile = savedProfile ? JSON.parse(savedProfile) : {};
+      
+      if (!window.userProfile.fullName) {
+        window.userProfile.fullName = user.displayName || "";
+      }
+      
+      window.updateWelcomeText();
 
       const savedVouchers = localStorage.getItem('zuno_vouchers_' + user.uid);
       window.vouchers = savedVouchers ? JSON.parse(savedVouchers) : [];
+      window.eggQuota = Math.max(0, 2 - window.vouchers.length);
 
       window.updateEggUI();
       window.updateVoucherList();
@@ -621,6 +876,8 @@
       }
     } else {
       window.currentUserUid = null;
+      window.currentUserEmail = "";
+      window.userProfile = {};
       window.eggQuota = 2;
       window.vouchers = [];
       
@@ -629,7 +886,7 @@
       document.getElementById('egg-result').innerText = "";
       
       const currentView = document.querySelector('.view.active-block, .view.active-flex');
-      if (currentView && (currentView.id === 'home-page' || currentView.id === 'event-page' || currentView.id === 'profile-page' || currentView.id === 'loading-page')) {
+      if (currentView && (currentView.id !== 'landing-page' && currentView.id !== 'login-page' && currentView.id !== 'register-page')) {
         window.navigateTo('landing');
       }
     }
@@ -640,21 +897,29 @@
     const name = document.getElementById('reg-name').value;
     const email = document.getElementById('reg-email').value;
     const password = document.getElementById('reg-password').value;
+    const confirmPassword = document.getElementById('reg-confirm-password').value;
+    
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
     
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         return updateProfile(userCredential.user, {
           displayName: name
+        }).then(() => {
+          const newProfile = { fullName: name };
+          localStorage.setItem('zuno_profile_' + userCredential.user.uid, JSON.stringify(newProfile));
         });
       })
       .then(() => {
-        alert("Account created successfully!");
         signOut(auth).then(() => {
           window.navigateTo('login');
         });
       })
       .catch((error) => {
-        alert("Error: " + error.message);
+        alert(error.message);
       });
   };
 
@@ -665,13 +930,12 @@
     
     signInWithEmailAndPassword(auth, email, password)
       .catch((error) => {
-        alert("Error: " + error.message);
+        alert(error.message);
       });
   };
 
   window.logout = () => {
     signOut(auth).catch((error) => {
-      alert("Error: " + error.message);
     });
   };
 </script>
