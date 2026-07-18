@@ -653,11 +653,12 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-  import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCsUZbm8Lam7PA-xDa_un2zttqPtFnTMjg",
     authDomain: "zuno-dev-2e5fa.firebaseapp.com",
+    databaseURL: "https://zuno-dev-2e5fa-default-rtdb.asia-southeast1.firebasedatabase.app",
     projectId: "zuno-dev-2e5fa",
     storageBucket: "zuno-dev-2e5fa.firebasestorage.app",
     messagingSenderId: "20969396601",
@@ -667,7 +668,7 @@
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const db = getFirestore(app);
+  const db = getDatabase(app);
 
   window.eggQuota = 2;
   window.vouchers = [];
@@ -687,7 +688,7 @@
     }
   };
 
-  window.saveToLocalAndCloud = async () => {
+  window.saveToLocalAndCloud = () => {
     if (!window.currentUserUid) return;
     
     const dataObj = {
@@ -699,11 +700,8 @@
     localStorage.setItem('zuno_data_' + window.currentUserUid, JSON.stringify(dataObj));
 
     try {
-      const docRef = doc(db, "users", window.currentUserUid);
-      await setDoc(docRef, dataObj, { merge: true });
-    } catch (error) {
-      console.warn("Firestore sync pending or failed:", error);
-    }
+      set(ref(db, 'users/' + window.currentUserUid), dataObj);
+    } catch (error) {}
   };
 
   window.crackEgg = () => {
@@ -887,10 +885,10 @@
       window.updateVoucherList();
 
       try {
-        const docRef = doc(db, "users", user.uid);
-        unsubSnapshot = onSnapshot(docRef, (docSnap) => {
-          if (docSnap.exists()) {
-            const data = docSnap.data();
+        const userRef = ref(db, 'users/' + user.uid);
+        unsubSnapshot = onValue(userRef, (snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.val();
             window.userProfile = data.profile || window.userProfile;
             window.vouchers = data.vouchers || window.vouchers;
             window.eggQuota = data.quota !== undefined ? data.quota : window.eggQuota;
@@ -905,12 +903,8 @@
             window.updateEggUI();
             window.updateVoucherList();
           }
-        }, (error) => {
-          console.warn("Firestore sync disabled due to permissions:", error);
         });
-      } catch (e) {
-        console.warn("Firestore initialization skipped.");
-      }
+      } catch (e) {}
 
       const currentView = document.querySelector('.view.active-block, .view.active-flex');
       if (!currentView || currentView.id === 'loading-page' || currentView.id === 'landing-page' || currentView.id === 'login-page' || currentView.id === 'register-page') {
@@ -959,7 +953,7 @@
         window.vouchers = [];
         window.eggQuota = 2;
         
-        await window.saveToLocalAndCloud();
+        window.saveToLocalAndCloud();
         await signOut(auth);
         window.navigateTo('login');
       })
