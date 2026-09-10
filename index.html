@@ -106,6 +106,8 @@
       align-items: center;
       gap: 5px;
       transition: color 0.3s ease;
+      flex: 1;
+      text-align: center;
     }
 
     .bottom-nav a.active-link, .bottom-nav a:hover {
@@ -166,11 +168,6 @@
       color: white;
     }
 
-    .hero img {
-      width: 260px;
-      margin: 30px auto 0;
-    }
-
     .features {
       text-align: center;
       padding: 50px 20px;
@@ -220,7 +217,7 @@
       color: #666;
     }
 
-    .form-group input, .form-group select {
+    .form-group input, .form-group select, .form-group textarea {
       width: 100%;
       padding: 10px 12px;
       border: 1px solid #ddd;
@@ -231,7 +228,7 @@
       background: white;
     }
 
-    .form-group input:focus, .form-group select:focus {
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
       border-color: #e60023;
     }
     
@@ -370,6 +367,53 @@
       font-weight: bold;
     }
 
+    /* Mentor Card Styling for Student View */
+    .mentor-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+      margin-bottom: 15px;
+      text-align: left;
+      border-left: 4px solid #e60023;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .mentor-card:active {
+      transform: scale(0.98);
+    }
+
+    .mentor-card h3 {
+      color: #333;
+      margin-bottom: 5px;
+      font-size: 18px;
+    }
+
+    .mentor-card .meta {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    .mentor-card .rate {
+      font-size: 15px;
+      font-weight: bold;
+      color: #2ECC71;
+      margin-top: 10px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #fee2e2;
+      color: #b91c1c;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-right: 5px;
+    }
+
     footer {
       text-align: center;
       padding: 20px;
@@ -405,10 +449,6 @@
         width: auto;
         margin-right: 10px;
       }
-      .hero img {
-        width: 400px;
-        margin: 0;
-      }
       .feature-box {
         flex-direction: row;
         justify-content: space-between;
@@ -429,14 +469,12 @@
         padding-bottom: 5px;
         border-bottom: 2px solid #fee2e2;
       }
-
       .checkbox-group {
         display: flex;
         gap: 10px;
         align-items: center;
         margin-top: 5px;
       }
-
       .checkbox-group input {
         width: auto;
       }
@@ -446,7 +484,7 @@
 <body>
 
 <header>
-  <a href="#" class="logo" onclick="navigateTo('landing')">ZUNO</a>
+  <a href="#" class="logo" onclick="navigateToLanding()">ZUNO</a>
   <div class="nav" id="top-nav" style="display: none;">
     <a href="#" onclick="navigateTo('login')">Login</a>
     <a href="#" onclick="navigateTo('register')">Register</a>
@@ -457,6 +495,7 @@
   <h2>Loading...</h2>
 </main>
 
+<!-- LANDING PAGE SISWA -->
 <main id="landing-page" class="view">
   <section class="hero">
     <div class="hero-text">
@@ -468,7 +507,6 @@
       <button class="btn" onclick="navigateTo('login')">Login</button>
       <button class="btn btn-secondary" onclick="navigateTo('register')">Sign Up</button>
     </div>
-    <img src="logo_zuno.png" alt="ZUNO Logo">
   </section>
 
   <section class="features">  
@@ -490,16 +528,17 @@
   </section>
 </main>
 
+<!-- LOGIN & REGISTER SISWA -->
 <section id="login-page" class="view">
   <div class="auth-card">
     <h2>Login to ZUNO</h2>
-    <form onsubmit="handleLogin(event)">
+    <form onsubmit="handleLogin(event, 'student', 'login-email', 'login-password')">
       <div class="form-group">
-        <label for="login-email">Email Address</label>
+        <label>Email Address</label>
         <input type="email" id="login-email" placeholder="Enter your email" required>
       </div>
       <div class="form-group">
-        <label for="login-password">Password</label>
+        <label>Password</label>
         <div class="password-wrapper">
           <input type="password" id="login-password" placeholder="Enter your password" required>
           <span class="toggle-password" onclick="togglePassword('login-password', this)">👁️</span>
@@ -514,24 +553,24 @@
 <section id="register-page" class="view">
   <div class="auth-card">
     <h2>Create Account</h2>
-    <form onsubmit="handleRegister(event)">
+    <form onsubmit="handleRegister(event, 'student', 'reg-')">
       <div class="form-group">
-        <label for="reg-name">Full Name</label>
+        <label>Full Name</label>
         <input type="text" id="reg-name" placeholder="Enter your full name" required>
       </div>
       <div class="form-group">
-        <label for="reg-email">Email Address</label>
+        <label>Email Address</label>
         <input type="email" id="reg-email" placeholder="Enter your email" required>
       </div>
       <div class="form-group">
-        <label for="reg-password">Password</label>
+        <label>Password</label>
         <div class="password-wrapper">
           <input type="password" id="reg-password" placeholder="Create a password" required>
           <span class="toggle-password" onclick="togglePassword('reg-password', this)">👁️</span>
         </div>
       </div>
       <div class="form-group">
-        <label for="reg-confirm-password">Confirm Password</label>
+        <label>Confirm Password</label>
         <div class="password-wrapper">
           <input type="password" id="reg-confirm-password" placeholder="Confirm your password" required>
           <span class="toggle-password" onclick="togglePassword('reg-confirm-password', this)">👁️</span>
@@ -543,17 +582,94 @@
   </div>
 </section>
 
+<!-- LOGIN & REGISTER MENTOR (Tersembunyi via URL /mentor) -->
+<section id="mentor-login-page" class="view">
+  <div class="auth-card" style="border-top: 5px solid #166534;">
+    <h2 style="color: #166534;">Portal Mentor ZUNO</h2>
+    <p style="margin-bottom: 20px; font-size:13px;">Login khusus pengajar.</p>
+    <form onsubmit="handleLogin(event, 'mentor', 'mentor-login-email', 'mentor-login-password')">
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="mentor-login-email" placeholder="Enter your email" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="mentor-login-password" placeholder="Enter your password" required>
+          <span class="toggle-password" onclick="togglePassword('mentor-login-password', this)">👁️</span>
+        </div>
+      </div>
+      <button type="submit" class="btn" style="background: #166534;">Sign In as Mentor</button>
+    </form>
+    <p>Ingin bergabung menjadi mentor? <a href="#" onclick="navigateTo('mentor-register')" style="color:#166534;">Daftar di sini</a></p>
+  </div>
+</section>
+
+<section id="mentor-register-page" class="view">
+  <div class="auth-card" style="border-top: 5px solid #166534;">
+    <h2 style="color: #166534;">Daftar Mentor Baru</h2>
+    <form onsubmit="handleRegister(event, 'mentor', 'mentor-reg-')">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="mentor-reg-name" placeholder="Nama lengkap sesuai KTP" required>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="mentor-reg-email" placeholder="Email aktif" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="mentor-reg-password" placeholder="Create a password" required>
+          <span class="toggle-password" onclick="togglePassword('mentor-reg-password', this)">👁️</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="mentor-reg-confirm-password" placeholder="Confirm your password" required>
+          <span class="toggle-password" onclick="togglePassword('mentor-reg-confirm-password', this)">👁️</span>
+        </div>
+      </div>
+      <button type="submit" class="btn" style="background: #166534;">Daftar sebagai Mentor</button>
+    </form>
+    <p>Sudah punya akun mentor? <a href="#" onclick="navigateTo('mentor-login')" style="color:#166534;">Login di sini</a></p>
+  </div>
+</section>
+
+<!-- MAIN APP PAGES (Setelah Login) -->
 <main id="home-page" class="view">
   <section style="padding: 40px 20px; text-align: center;">
     <h1 id="welcome-text" style="margin-bottom: 20px; color: #e60023;"></h1>
-    <p>Find your Mandarin tutor here.</p>
+    <p>Selamat datang di dashboard ZUNO.</p>
   </section>
 </main>
+
+<!-- DAFTAR MENTOR (Bisa dilihat Siswa) -->
+<section id="mentors-list-page" class="view">
+  <div style="width: 100%; max-width: 500px; margin: 0 auto; padding: 20px;">
+    <h2 style="margin-bottom: 20px; color: #333;">Pilih Mentor Kamu</h2>
+    <div id="mentors-container">
+      <!-- List Mentor muncul di sini -->
+      <p style="text-align: center; color: #888;">Memuat data mentor...</p>
+    </div>
+  </div>
+</section>
+
+<!-- DETAIL MENTOR -->
+<section id="mentor-detail-page" class="view">
+  <div class="auth-card" style="max-width: 500px;">
+    <a href="#" onclick="navigateTo('mentors-list')" style="color:#e60023; text-decoration:none; font-weight:bold; display:block; margin-bottom:15px;">&lt; Kembali</a>
+    <div id="mentor-detail-content">
+      <!-- Detail dirender via JS -->
+    </div>
+    <button class="btn" style="margin-top: 20px; background: #2ECC71;" onclick="alert('Fitur Booking akan segera hadir!')">Pesan Jadwal Kelas</button>
+  </div>
+</section>
 
 <section id="event-page" class="view">
   <div style="width: 100%; max-width: 400px; margin: 0 auto; padding: 20px;">
     <h2 style="margin-bottom: 25px; text-align: center; color: #333;">Available Events</h2>
-    
     <div class="event-card" onclick="navigateTo('crack-egg')">
       <div class="event-card-header"></div>
       <div class="event-card-body">
@@ -580,12 +696,14 @@
     <h2 style="margin-bottom: 25px; text-align: center; color: #333;">Profile</h2>
     
     <div class="profile-menu">
-      <div class="profile-item" onclick="navigateTo('mentor-dashboard')">
+      <!-- Menu ini otomatis di-hide/show via JS berdasarkan Role -->
+      <div class="profile-item" id="menu-mentor-dashboard" style="display: none;" onclick="navigateTo('mentor-dashboard')">
         <div class="profile-item-left">
           <span>👨‍🏫</span> Dashboard Mentor
         </div>
         <div class="profile-arrow">&gt;</div>
       </div>
+
       <div class="profile-item" onclick="navigateTo('edit-profile')">
         <div class="profile-item-left">
           <span>📝</span> Edit Profile
@@ -610,19 +728,19 @@
     <h2 style="margin-bottom: 20px;">Edit Profile</h2>
     <form onsubmit="handleEditProfile(event)">
       <div class="form-group">
-        <label for="edit-fullname">Full Name</label>
+        <label>Full Name</label>
         <input type="text" id="edit-fullname" required>
       </div>
       <div class="form-group">
-        <label for="edit-nickname">Nickname</label>
+        <label>Nickname</label>
         <input type="text" id="edit-nickname">
       </div>
       <div class="form-group">
-        <label for="edit-dob">Date of Birth</label>
+        <label>Date of Birth</label>
         <input type="date" id="edit-dob">
       </div>
       <div class="form-group">
-        <label for="edit-gender">Gender</label>
+        <label>Gender</label>
         <select id="edit-gender">
           <option value="">Select Gender</option>
           <option value="Male">Male</option>
@@ -630,19 +748,19 @@
         </select>
       </div>
       <div class="form-group">
-        <label for="edit-school">School</label>
+        <label>School</label>
         <input type="text" id="edit-school">
       </div>
       <div class="form-group">
-        <label for="edit-city">Domicile City</label>
+        <label>Domicile City</label>
         <input type="text" id="edit-city">
       </div>
       <div class="form-group">
-        <label for="edit-phone">Phone Number</label>
+        <label>Phone Number</label>
         <input type="tel" id="edit-phone">
       </div>
       <div class="form-group">
-        <label for="edit-email">Email</label>
+        <label>Email</label>
         <input type="email" id="edit-email" readonly>
       </div>
       <button type="submit" class="btn">Save Profile</button>
@@ -654,34 +772,29 @@
   <div class="auth-card">
     <a href="#" onclick="navigateTo('profile')" style="color:#e60023; text-decoration:none; font-weight:bold; display:block; margin-bottom:20px;">&lt; Back</a>
     <h2 style="margin-bottom: 20px;">My Vouchers</h2>
-    <div id="voucher-list">
-    </div>
+    <div id="voucher-list"></div>
   </div>
 </section>
 
+<!-- DAHSBOARD PENGATURAN MENTOR (Hanya diakses Mentor) -->
 <section id="mentor-dashboard-page" class="view">
   <div class="auth-card" style="max-width: 600px; margin: 0 auto;">
     <a href="#" onclick="navigateTo('profile')" style="color:#e60023; text-decoration:none; font-weight:bold; display:block; margin-bottom:15px;">&lt; Back to Profile</a>
-    <h2>Dashboard Mentor</h2>
+    <h2 style="color: #166534;">Dashboard Mentor</h2>
+    <p style="text-align:center; font-size:13px; color:#666; margin-bottom:20px;">Lengkapi profil mengajarmu agar bisa dilihat oleh siswa.</p>
 
     <form onsubmit="handleSaveMentorProfile(event)">
-      <!-- 1. Informasi Dasar -->
       <div class="form-section-title">1. Informasi Dasar</div>
-      
       <div class="form-group">
-        <label for="mentor-photo">Foto Profil</label>
-        <input type="file" id="mentor-photo" accept="image/*">
-      </div>
-      <div class="form-group">
-        <label for="mentor-fullname">Nama Lengkap</label>
+        <label>Nama Lengkap</label>
         <input type="text" id="mentor-fullname" required>
       </div>
       <div class="form-group">
-        <label for="mentor-nickname">Nama Panggilan</label>
+        <label>Nama Panggilan</label>
         <input type="text" id="mentor-nickname" required>
       </div>
       <div class="form-group">
-        <label for="mentor-gender">Jenis Kelamin</label>
+        <label>Jenis Kelamin</label>
         <select id="mentor-gender" required>
           <option value="">Pilih Jenis Kelamin</option>
           <option value="Male">Laki-Laki</option>
@@ -689,91 +802,56 @@
         </select>
       </div>
       <div class="form-group">
-        <label for="mentor-dob">Tanggal Lahir</label>
-        <input type="date" id="mentor-dob" required>
-      </div>
-      <div class="form-group">
-        <label for="mentor-city">Kota Domisili</label>
+        <label>Kota Domisili</label>
         <input type="text" id="mentor-city" required>
       </div>
       <div class="form-group">
-        <label for="mentor-wa">Nomor WhatsApp</label>
+        <label>Nomor WhatsApp</label>
         <input type="tel" id="mentor-wa" placeholder="08xxxxxxxxxx" required>
       </div>
-      <div class="form-group">
-        <label for="mentor-email">Email</label>
-        <input type="email" id="mentor-email" readonly>
-      </div>
 
-      <!-- 2. Informasi Akademik -->
-      <div class="form-section-title">2. Informasi Akademik</div>
+      <div class="form-section-title">2. Informasi Akademik & Kredensial</div>
       <div class="form-group">
-        <label for="mentor-university">Universitas / Sekolah</label>
+        <label>Universitas / Institusi</label>
         <input type="text" id="mentor-university" placeholder="Contoh: Universitas Indonesia" required>
       </div>
       <div class="form-group">
-        <label for="mentor-cert-type">Sertifikat Mandarin</label>
+        <label>Sertifikat Mandarin</label>
         <input type="text" id="mentor-cert-type" placeholder="Contoh: HSK 5, TOCFL B2">
       </div>
-      <div class="form-group">
-        <label for="mentor-cert-file">Upload Sertifikat (PDF/Gambar)</label>
-        <input type="file" id="mentor-cert-file" accept="image/*,.pdf">
-      </div>
 
-      <!-- 3. Pengalaman Mengajar -->
-      <div class="form-section-title">3. Pengalaman Mengajar</div>
+      <div class="form-section-title">3. Detail Mengajar</div>
       <div class="form-group">
-        <label for="mentor-has-exp">Pernah Mengajar?</label>
-        <select id="mentor-has-exp" required>
-          <option value="Ya">Ya</option>
-          <option value="Tidak">Tidak</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="mentor-exp-duration">Lama Mengajar</label>
+        <label>Pengalaman Mengajar</label>
         <select id="mentor-exp-duration">
+          <option value="Belum Ada">Belum Ada</option>
           <option value="< 1 Tahun">&lt; 1 Tahun</option>
           <option value="1 - 3 Tahun">1 - 3 Tahun</option>
           <option value="> 3 Tahun">&gt; 3 Tahun</option>
         </select>
       </div>
-
-      <!-- 4. Pengaturan Mengajar -->
-      <div class="form-section-title">4. Pengaturan Mengajar</div>
       <div class="form-group checkbox-group">
         <input type="checkbox" id="mentor-online" checked>
-        <label for="mentor-online" style="margin:0;">Mengajar Online</label>
+        <label for="mentor-online" style="margin:0;">Bisa Mengajar Online</label>
       </div>
-
-      <!-- 5. Target Mengajar -->
-      <div class="form-section-title">5. Target Mengajar</div>
       <div class="form-group">
-        <label for="mentor-target">Target Murid</label>
+        <label>Spesialisasi / Target Murid</label>
         <input type="text" id="mentor-target" value="Umum" placeholder="Umum, Anak-anak, Persiapan HSK">
       </div>
-
-      <!-- 6. Tarif Mengajar -->
-      <div class="form-section-title">6. Tarif Mengajar</div>
       <div class="form-group">
-        <label for="mentor-rate">Tarif (Rp / Jam atau Pertemuan)</label>
+        <label>Tarif Mengajar (Rp / Sesi)</label>
         <input type="number" id="mentor-rate" placeholder="100000" step="5000" required>
       </div>
-
-      <!-- 7. Jadwal Ketersediaan -->
-      <div class="form-section-title">7. Jadwal Ketersediaan</div>
       <div class="form-group">
-        <label for="mentor-schedule">Hari & Jam Ketersediaan</label>
-        <textarea id="mentor-schedule" rows="3" placeholder="Contoh: Senin - Jumat (18:00 - 21:00), Sabtu (09:00 - 15:00)" style="width:100%; padding:10px; border-radius:6px; border:1px solid #ddd;" required></textarea>
+        <label>Jadwal Ketersediaan</label>
+        <textarea id="mentor-schedule" rows="3" placeholder="Contoh: Senin - Jumat (18:00 - 21:00)" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Link Video Perkenalan (Opsional)</label>
+        <input type="url" id="mentor-video" placeholder="https://youtube.com/...">
       </div>
 
-      <!-- 8. Video Perkenalan -->
-      <div class="form-section-title">8. Video Perkenalan (Opsional)</div>
-      <div class="form-group">
-        <label for="mentor-video">Link Video (YouTube / Google Drive)</label>
-        <input type="url" id="mentor-video" placeholder="https://...">
-      </div>
-
-      <button type="submit" class="btn" style="margin-top: 20px;">Simpan Profil Mentor</button>
+      <button type="submit" class="btn" style="margin-top: 20px; background:#166534;">Simpan & Tampilkan Profil</button>
     </form>
   </div>
 </section>
@@ -781,6 +859,9 @@
 <nav id="bottom-nav" class="bottom-nav">
   <a href="#" id="nav-home" onclick="navigateTo('home')">
     <span>🏠</span> Home
+  </a>
+  <a href="#" id="nav-mentors-list" onclick="navigateTo('mentors-list')">
+    <span>👨‍🏫</span> Mentors
   </a>
   <a href="#" id="nav-event" onclick="navigateTo('event')">
     <span>🎁</span> Event
@@ -814,14 +895,23 @@
   const auth = getAuth(app);
   const db = getDatabase(app);
 
+  // Cek apakah URL ditujukan untuk Mentor
+  const isMentorURL = window.location.pathname.includes('/mentor') || window.location.search.includes('role=mentor');
+
   window.eggQuota = 2;
   window.vouchers = [];
   window.currentUserUid = null;
-  window.userProfile = {};
-  window.mentorProfile = {};
   window.currentUserEmail = "";
+  
+  window.userProfile = {};
+  window.userRole = "student"; // Default
+  window.mentorProfile = {};
+  
+  window.allMentorsList = [];
+
   let unsubSnapshot = null;
   let unsubMentorSnapshot = null;
+  let unsubAllMentors = null;
 
   window.togglePassword = (inputId, iconElement) => {
     const input = document.getElementById(inputId);
@@ -839,17 +929,16 @@
     
     const dataObj = {
       profile: window.userProfile,
+      role: window.userRole,
       vouchers: window.vouchers,
       quota: window.eggQuota
     };
     
     localStorage.setItem('zuno_data_' + window.currentUserUid, JSON.stringify(dataObj));
-
-    try {
-      set(ref(db, 'users/' + window.currentUserUid), dataObj);
-    } catch (error) {}
+    try { set(ref(db, 'users/' + window.currentUserUid), dataObj); } catch (error) {}
   };
 
+  // --- Logic Event Egg ---
   window.crackEgg = () => {
     if (window.eggQuota > 0) {
       const amounts = [1, 10, 100];
@@ -862,7 +951,6 @@
       document.getElementById('egg-result').innerText = "Congratulations! You got a " + voucherText + "!";
       window.updateEggUI();
       window.updateVoucherList();
-      
       window.saveToLocalAndCloud();
     }
   };
@@ -870,19 +958,15 @@
   window.updateEggUI = () => {
     const eggElement = document.getElementById('egg-element');
     const eggQuotaText = document.getElementById('egg-quota-text');
-    
-    if (window.eggQuota > 0) {
-      eggElement.innerText = "🥚";
-    } else {
-      eggElement.innerText = "🎊";
-    }
+    if (window.eggQuota > 0) { eggElement.innerText = "🥚"; } 
+    else { eggElement.innerText = "🎊"; }
     eggQuotaText.innerText = "Remaining egg: " + window.eggQuota;
   };
 
   window.updateVoucherList = () => {
     const list = document.getElementById('voucher-list');
     if (window.vouchers.length === 0) {
-      list.innerHTML = '<p style="color: #888; text-align: center; margin-top: 20px; font-size: 15px;">No vouchers available.</p>';
+      list.innerHTML = '<p style="color: #888; text-align: center; margin-top: 20px;">No vouchers available.</p>';
     } else {
       list.innerHTML = window.vouchers.map(v => `<div class="voucher-item">${v}</div>`).join('');
     }
@@ -893,9 +977,91 @@
     const fullName = window.userProfile.fullName || "";
     const firstName = fullName.trim().split(' ')[0] || "User";
     const display = nickname ? nickname : firstName;
-    document.getElementById('welcome-text').innerText = "Welcome, " + display;
+    const suffix = window.userRole === 'mentor' ? " (Mentor)" : "";
+    document.getElementById('welcome-text').innerText = "Welcome, " + display + suffix;
   };
 
+  // --- Logic Navigation ---
+  window.navigateToLanding = () => {
+    window.navigateTo(isMentorURL ? 'mentor-login' : 'landing');
+  }
+
+  window.navigateTo = (page) => {
+    document.querySelectorAll('.view').forEach(v => v.className = 'view');
+    
+    const topNav = document.getElementById('top-nav');
+    const bottomNav = document.getElementById('bottom-nav');
+    const footer = document.getElementById('main-footer');
+    
+    // Reset bottom nav classes
+    ['nav-home', 'nav-mentors-list', 'nav-event', 'nav-profile'].forEach(id => {
+      document.getElementById(id).className = '';
+    });
+
+    const isPublicPage = ['landing', 'login', 'register', 'mentor-login', 'mentor-register'].includes(page);
+    footer.style.display = isPublicPage && page !== 'mentor-login' && page !== 'mentor-register' ? 'block' : 'none';
+    bottomNav.className = isPublicPage || page === 'loading' ? 'bottom-nav' : 'bottom-nav active';
+
+    if (page === 'loading') {
+      document.getElementById('loading-page').className = 'view active-flex';
+      topNav.style.display = 'none';
+    }
+    else if (page === 'landing') {
+      document.getElementById('landing-page').className = 'view active-block';
+      topNav.style.display = 'flex'; 
+    } 
+    else if (page === 'login' || page === 'register' || page === 'mentor-login' || page === 'mentor-register') {
+      document.getElementById(page + '-page').className = 'view active-flex';
+      topNav.style.display = page.includes('mentor') ? 'none' : 'flex';
+    } 
+    else if (page === 'home') {
+      document.getElementById('home-page').className = 'view active-block';
+      topNav.style.display = 'none'; 
+      document.getElementById('nav-home').className = 'active-link';
+    } 
+    else if (page === 'mentors-list') {
+      window.renderMentorsListUI();
+      document.getElementById('mentors-list-page').className = 'view active-block';
+      topNav.style.display = 'none';
+      document.getElementById('nav-mentors-list').className = 'active-link';
+    }
+    else if (page === 'mentor-detail') {
+      document.getElementById('mentor-detail-page').className = 'view active-flex';
+      topNav.style.display = 'none';
+      document.getElementById('nav-mentors-list').className = 'active-link';
+    }
+    else if (page === 'event' || page === 'crack-egg') {
+      document.getElementById(page + '-page').className = page === 'event' ? 'view active-block' : 'view active-flex';
+      topNav.style.display = 'none';
+      document.getElementById('nav-event').className = 'active-link';
+    }
+    else if (page === 'profile') {
+      document.getElementById('profile-page').className = 'view active-block';
+      topNav.style.display = 'none';
+      document.getElementById('nav-profile').className = 'active-link';
+    }
+    else if (page === 'edit-profile') {
+      window.populateProfileForm();
+      document.getElementById('edit-profile-page').className = 'view active-flex';
+      topNav.style.display = 'none';
+      document.getElementById('nav-profile').className = 'active-link';
+    }
+    else if (page === 'vouchers') {
+      document.getElementById('vouchers-page').className = 'view active-flex';
+      topNav.style.display = 'none';
+      document.getElementById('nav-profile').className = 'active-link';
+    }
+    else if (page === 'mentor-dashboard') {
+      window.populateMentorForm();
+      document.getElementById('mentor-dashboard-page').className = 'view active-flex';
+      topNav.style.display = 'none';
+      document.getElementById('nav-profile').className = 'active-link';
+    }
+    
+    window.scrollTo(0, 0);
+  };
+
+  // --- Logic Edit Profile ---
   window.populateProfileForm = () => {
     document.getElementById('edit-fullname').value = window.userProfile.fullName || "";
     document.getElementById('edit-nickname').value = window.userProfile.nickname || "";
@@ -910,6 +1076,7 @@
   window.handleEditProfile = (event) => {
     event.preventDefault();
     window.userProfile = {
+      ...window.userProfile,
       fullName: document.getElementById('edit-fullname').value,
       nickname: document.getElementById('edit-nickname').value,
       dob: document.getElementById('edit-dob').value,
@@ -920,9 +1087,7 @@
     };
     
     if (auth.currentUser && window.userProfile.fullName) {
-      updateProfile(auth.currentUser, {
-        displayName: window.userProfile.fullName
-      }).catch(()=>{});
+      updateProfile(auth.currentUser, { displayName: window.userProfile.fullName }).catch(()=>{});
     }
     
     window.updateWelcomeText();
@@ -930,92 +1095,73 @@
     window.navigateTo('profile');
   };
 
-  window.navigateTo = (page) => {
-    document.querySelectorAll('.view').forEach(v => v.className = 'view');
-    
-    const topNav = document.getElementById('top-nav');
-    const bottomNav = document.getElementById('bottom-nav');
-    const footer = document.getElementById('main-footer');
-    
-    document.getElementById('nav-home').className = '';
-    document.getElementById('nav-event').className = '';
-    document.getElementById('nav-profile').className = '';
-
-    if (page === 'landing' || page === 'login' || page === 'register') {
-      footer.style.display = 'block';
-    } else {
-      footer.style.display = 'none';
-    }
-
-    if (page === 'loading') {
-      document.getElementById('loading-page').className = 'view active-flex';
-      topNav.style.display = 'none';
-      bottomNav.className = 'bottom-nav';
-      footer.style.display = 'none';
-    }
-    else if (page === 'landing') {
-      document.getElementById('landing-page').className = 'view active-block';
-      topNav.style.display = 'flex'; 
-      bottomNav.className = 'bottom-nav';
-    } 
-    else if (page === 'login') {
-      document.getElementById('login-page').className = 'view active-flex';
-      topNav.style.display = 'flex';
-      bottomNav.className = 'bottom-nav';
-    } 
-    else if (page === 'register') {
-      document.getElementById('register-page').className = 'view active-flex';
-      topNav.style.display = 'flex';
-      bottomNav.className = 'bottom-nav';
-    } 
-    else if (page === 'home') {
-      document.getElementById('home-page').className = 'view active-block';
-      topNav.style.display = 'none'; 
-      bottomNav.className = 'bottom-nav active'; 
-      document.getElementById('nav-home').className = 'active-link';
-    } 
-    else if (page === 'event') {
-      document.getElementById('event-page').className = 'view active-block';
-      topNav.style.display = 'none';
-      bottomNav.className = 'bottom-nav active';
-      document.getElementById('nav-event').className = 'active-link';
-    }
-    else if (page === 'crack-egg') {
-      document.getElementById('crack-egg-page').className = 'view active-flex';
-      topNav.style.display = 'none';
-      bottomNav.className = 'bottom-nav active';
-      document.getElementById('nav-event').className = 'active-link';
-    }
-    else if (page === 'profile') {
-      document.getElementById('profile-page').className = 'view active-block';
-      topNav.style.display = 'none';
-      bottomNav.className = 'bottom-nav active';
-      document.getElementById('nav-profile').className = 'active-link';
-    }
-    else if (page === 'edit-profile') {
-      window.populateProfileForm();
-      document.getElementById('edit-profile-page').className = 'view active-flex';
-      topNav.style.display = 'none';
-      bottomNav.className = 'bottom-nav active';
-      document.getElementById('nav-profile').className = 'active-link';
-    }
-    else if (page === 'vouchers') {
-      document.getElementById('vouchers-page').className = 'view active-flex';
-      topNav.style.display = 'none';
-      bottomNav.className = 'bottom-nav active';
-      document.getElementById('nav-profile').className = 'active-link';
-    }
-    else if (page === 'mentor-dashboard') {
-      window.populateMentorForm();
-      document.getElementById('mentor-dashboard-page').className = 'view active-flex';
-      topNav.style.display = 'none';
-      bottomNav.className = 'bottom-nav active';
-      document.getElementById('nav-profile').className = 'active-link';
-    }
-    
-    window.scrollTo(0, 0);
+  // --- Logic Mentor List (Untuk Siswa) ---
+  const loadAllMentors = () => {
+    if(unsubAllMentors) unsubAllMentors();
+    unsubAllMentors = onValue(ref(db, 'mentors'), (snapshot) => {
+      if(snapshot.exists()) {
+        const data = snapshot.val();
+        window.allMentorsList = Object.keys(data).map(uid => ({ uid, ...data[uid] }));
+      } else {
+        window.allMentorsList = [];
+      }
+      // Re-render if we are on the mentors list page
+      const currentView = document.querySelector('.view.active-block, .view.active-flex');
+      if(currentView && currentView.id === 'mentors-list-page') {
+        window.renderMentorsListUI();
+      }
+    });
   };
 
+  window.renderMentorsListUI = () => {
+    const container = document.getElementById('mentors-container');
+    if (!container) return;
+    
+    if (window.allMentorsList.length === 0) {
+      container.innerHTML = '<p style="text-align:center; color:#888;">Belum ada mentor yang mendaftar saat ini.</p>';
+      return;
+    }
+
+    container.innerHTML = window.allMentorsList.map(m => `
+      <div class="mentor-card" onclick="showMentorDetail('${m.uid}')">
+        <h3>${m.fullName || 'Mentor'}</h3>
+        <p class="meta">🎓 ${m.university || '-'}</p>
+        <p class="meta">🏅 ${m.certType || 'Sertifikat belum diisi'}</p>
+        <div style="margin-top: 8px;">
+           ${m.isOnline ? '<span class="badge">Online</span>' : ''}
+           <span class="badge" style="background:#e0f2fe; color:#0369a1;">🎯 ${m.target || 'Umum'}</span>
+        </div>
+        <p class="rate">Rp ${m.rate ? m.rate.toLocaleString('id-ID') : '0'} / Sesi</p>
+      </div>
+    `).join('');
+  };
+
+  window.showMentorDetail = (uid) => {
+    const m = window.allMentorsList.find(x => x.uid === uid);
+    if (!m) return;
+    const container = document.getElementById('mentor-detail-content');
+    
+    container.innerHTML = `
+      <h2 style="margin-bottom: 5px; color: #333;">${m.fullName}</h2>
+      <p style="color: #666; margin-bottom: 15px; font-size:14px;">${m.nickname ? 'Panggilan: ' + m.nickname : ''}</p>
+      
+      <p style="margin-bottom: 5px;"><strong>🏫 Pendidikan:</strong> ${m.university || '-'}</p>
+      <p style="margin-bottom: 5px;"><strong>📜 Sertifikat:</strong> ${m.certType || '-'}</p>
+      <p style="margin-bottom: 5px;"><strong>💼 Pengalaman:</strong> ${m.expDuration || 'Belum diisi'}</p>
+      <p style="margin-bottom: 5px;"><strong>🎯 Target Murid:</strong> ${m.target || 'Umum'}</p>
+      <p style="margin-bottom: 5px;"><strong>💰 Tarif Sesi:</strong> Rp ${m.rate ? m.rate.toLocaleString('id-ID') : '0'}</p>
+      
+      <div style="margin-top: 20px; padding: 15px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px;">
+        <strong style="display:block; margin-bottom:5px; color:#1f2937;">📅 Jadwal Ketersediaan:</strong>
+        <span style="white-space: pre-wrap; color:#4b5563; font-size:14px;">${m.schedule || 'Mentor belum mengatur jadwal.'}</span>
+      </div>
+
+      ${m.videoUrl ? `<a href="${m.videoUrl}" target="_blank" class="btn btn-secondary" style="display:block; text-align:center; margin-top:15px; text-decoration:none;">Tonton Video Perkenalan</a>` : ''}
+    `;
+    window.navigateTo('mentor-detail');
+  };
+
+  // --- Logic Dashboard Mentor ---
   window.populateMentorForm = () => {
     const p = window.userProfile || {};
     const m = window.mentorProfile || {};
@@ -1023,15 +1169,12 @@
     document.getElementById('mentor-fullname').value = m.fullName || p.fullName || "";
     document.getElementById('mentor-nickname').value = m.nickname || p.nickname || "";
     document.getElementById('mentor-gender').value = m.gender || p.gender || "";
-    document.getElementById('mentor-dob').value = m.dob || p.dob || "";
     document.getElementById('mentor-city').value = m.city || p.city || "";
     document.getElementById('mentor-wa').value = m.phone || p.phone || "";
-    document.getElementById('mentor-email').value = window.currentUserEmail || "";
     
     document.getElementById('mentor-university').value = m.university || p.school || "";
     document.getElementById('mentor-cert-type').value = m.certType || "";
-    document.getElementById('mentor-has-exp').value = m.hasExp || "Ya";
-    document.getElementById('mentor-exp-duration').value = m.expDuration || "< 1 Tahun";
+    document.getElementById('mentor-exp-duration').value = m.expDuration || "Belum Ada";
     document.getElementById('mentor-online').checked = m.isOnline !== undefined ? m.isOnline : true;
     document.getElementById('mentor-target').value = m.target || "Umum";
     document.getElementById('mentor-rate').value = m.rate || "";
@@ -1047,13 +1190,11 @@
       fullName: document.getElementById('mentor-fullname').value,
       nickname: document.getElementById('mentor-nickname').value,
       gender: document.getElementById('mentor-gender').value,
-      dob: document.getElementById('mentor-dob').value,
       city: document.getElementById('mentor-city').value,
       phone: document.getElementById('mentor-wa').value,
       email: window.currentUserEmail,
       university: document.getElementById('mentor-university').value,
       certType: document.getElementById('mentor-cert-type').value,
-      hasExp: document.getElementById('mentor-has-exp').value,
       expDuration: document.getElementById('mentor-exp-duration').value,
       isOnline: document.getElementById('mentor-online').checked,
       target: document.getElementById('mentor-target').value,
@@ -1067,7 +1208,7 @@
 
     set(ref(db, 'mentors/' + window.currentUserUid), mentorData)
       .then(() => {
-        alert("Profil Mentor berhasil disimpan!");
+        alert("Profil mengajarmu berhasil diperbarui dan dipublikasikan!");
         window.navigateTo('profile');
       })
       .catch((err) => {
@@ -1075,6 +1216,7 @@
       });
   };
 
+  // --- Logic Auth & State Listener ---
   onAuthStateChanged(auth, (user) => {
     if (user) {
       window.currentUserUid = user.uid;
@@ -1084,32 +1226,36 @@
       if (localData) {
         const parsed = JSON.parse(localData);
         window.userProfile = parsed.profile || { fullName: user.displayName || "" };
+        window.userRole = parsed.role || "student"; // Default ke student jika data lama
         window.vouchers = parsed.vouchers || [];
         window.eggQuota = parsed.quota !== undefined ? parsed.quota : 2;
-      } else {
-        window.userProfile = { fullName: user.displayName || "" };
-        window.vouchers = [];
-        window.eggQuota = 2;
       }
 
       window.updateWelcomeText();
       window.updateEggUI();
       window.updateVoucherList();
 
+      // Listen User Role & Profile
       try {
-        const userRef = ref(db, 'users/' + user.uid);
-        unsubSnapshot = onValue(userRef, (snapshot) => {
+        unsubSnapshot = onValue(ref(db, 'users/' + user.uid), (snapshot) => {
           if (snapshot.exists()) {
             const data = snapshot.val();
             window.userProfile = data.profile || window.userProfile;
+            window.userRole = data.role || window.userRole;
             window.vouchers = data.vouchers || window.vouchers;
             window.eggQuota = data.quota !== undefined ? data.quota : window.eggQuota;
             
             localStorage.setItem('zuno_data_' + user.uid, JSON.stringify({
-              profile: window.userProfile,
-              vouchers: window.vouchers,
-              quota: window.eggQuota
+              profile: window.userProfile, role: window.userRole, vouchers: window.vouchers, quota: window.eggQuota
             }));
+
+            // Tampilkan menu Dashboard Mentor HANYA untuk role mentor
+            const dashMenu = document.getElementById('menu-mentor-dashboard');
+            if(window.userRole === 'mentor') {
+              dashMenu.style.display = 'flex';
+            } else {
+              dashMenu.style.display = 'none';
+            }
 
             window.updateWelcomeText();
             window.updateEggUI();
@@ -1118,56 +1264,54 @@
         });
       } catch (e) {}
 
+      // Listen Mentor Profile info
       try {
-        const mentorRef = ref(db, 'mentors/' + user.uid);
-        unsubMentorSnapshot = onValue(mentorRef, (snapshot) => {
-          if (snapshot.exists()) {
-            window.mentorProfile = snapshot.val();
-          } else {
-            window.mentorProfile = {};
-          }
+        unsubMentorSnapshot = onValue(ref(db, 'mentors/' + user.uid), (snapshot) => {
+          if (snapshot.exists()) { window.mentorProfile = snapshot.val(); } 
+          else { window.mentorProfile = {}; }
         });
       } catch (e) {}
 
+      // Muat daftar mentor secara global (untuk siswa melihat)
+      loadAllMentors();
+
       const currentView = document.querySelector('.view.active-block, .view.active-flex');
-      if (!currentView || currentView.id === 'loading-page' || currentView.id === 'landing-page' || currentView.id === 'login-page' || currentView.id === 'register-page') {
+      if (!currentView || currentView.id === 'loading-page' || currentView.id.includes('landing') || currentView.id.includes('login') || currentView.id.includes('register')) {
         window.navigateTo('home');
       }
     } else {
+      // User Logout / Belum Login
       window.currentUserUid = null;
       window.currentUserEmail = "";
       window.userProfile = {};
+      window.userRole = "student";
       window.mentorProfile = {};
       window.eggQuota = 2;
       window.vouchers = [];
       
-      if (unsubSnapshot) {
-        unsubSnapshot();
-        unsubSnapshot = null;
-      }
-
-      if (unsubMentorSnapshot) {
-        unsubMentorSnapshot();
-        unsubMentorSnapshot = null;
-      }
+      if (unsubSnapshot) { unsubSnapshot(); unsubSnapshot = null; }
+      if (unsubMentorSnapshot) { unsubMentorSnapshot(); unsubMentorSnapshot = null; }
+      if (unsubAllMentors) { unsubAllMentors(); unsubAllMentors = null; }
       
       window.updateEggUI();
       window.updateVoucherList();
       document.getElementById('egg-result').innerText = "";
       
       const currentView = document.querySelector('.view.active-block, .view.active-flex');
-      if (currentView && (currentView.id !== 'landing-page' && currentView.id !== 'login-page' && currentView.id !== 'register-page')) {
-        window.navigateTo('landing');
+      if (currentView && !currentView.id.includes('login') && !currentView.id.includes('register') && currentView.id !== 'landing-page') {
+        window.navigateToLanding();
+      } else if (!currentView || currentView.id === 'loading-page') {
+        window.navigateToLanding();
       }
     }
   });
 
-  window.handleRegister = (event) => {
+  window.handleRegister = (event, role, idPrefix) => {
     event.preventDefault();
-    const name = document.getElementById('reg-name').value;
-    const email = document.getElementById('reg-email').value;
-    const password = document.getElementById('reg-password').value;
-    const confirmPassword = document.getElementById('reg-confirm-password').value;
+    const name = document.getElementById(idPrefix + 'name').value;
+    const email = document.getElementById(idPrefix + 'email').value;
+    const password = document.getElementById(idPrefix + 'password').value;
+    const confirmPassword = document.getElementById(idPrefix + 'confirm-password').value;
     
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
@@ -1179,22 +1323,40 @@
         await updateProfile(userCredential.user, { displayName: name });
         window.currentUserUid = userCredential.user.uid;
         window.userProfile = { fullName: name };
+        window.userRole = role;
         window.vouchers = [];
         window.eggQuota = 2;
         
-        window.saveToLocalAndCloud();
+        // Simpan Data Role ke Users Node
+        await set(ref(db, 'users/' + userCredential.user.uid), {
+          profile: window.userProfile,
+          role: role,
+          vouchers: window.vouchers,
+          quota: window.eggQuota
+        });
+
+        // Inisiasi Node Mentor Jika Mendaftar Sebagai Mentor
+        if(role === 'mentor') {
+          await set(ref(db, 'mentors/' + userCredential.user.uid), {
+            fullName: name,
+            email: email,
+            isOnline: true
+          });
+        }
+        
         await signOut(auth);
-        window.navigateTo('login');
+        alert("Pendaftaran berhasil! Silakan Sign In.");
+        window.navigateTo(role === 'mentor' ? 'mentor-login' : 'login');
       })
       .catch((error) => {
         alert(error.message);
       });
   };
 
-  window.handleLogin = (event) => {
+  window.handleLogin = (event, role, emailId, passwordId) => {
     event.preventDefault();
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
+    const email = document.getElementById(emailId).value;
+    const password = document.getElementById(passwordId).value;
     
     signInWithEmailAndPassword(auth, email, password)
       .catch((error) => {
@@ -1203,8 +1365,7 @@
   };
 
   window.logout = () => {
-    signOut(auth).catch((error) => {
-    });
+    signOut(auth).catch((error) => {});
   };
 </script>
 
