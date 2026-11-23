@@ -118,6 +118,14 @@
       font-size: 20px; 
     }
 
+    /* Khusus untuk ikon gambar di bottom nav */
+    .bottom-nav a img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      margin-bottom: 2px;
+    }
+
     /* --- GAYA BARU UNTUK LANDING PAGE --- */
     .landing-wrapper {
       display: flex;
@@ -163,7 +171,7 @@
     .role-cards {
       display: flex;
       gap: 15px;
-      margin-bottom: 30px;
+      margin-bottom: 10px;
     }
 
     .role-card {
@@ -183,9 +191,9 @@
       transform: scale(0.98);
     }
 
-    .role-card.active {
+    .role-card:hover {
       background: #fff4f4;
-      border-color: #fff4f4;
+      border-color: #e60023;
     }
 
     .role-card img {
@@ -205,35 +213,6 @@
       font-size: 12px;
       color: #666;
       line-height: 1.4;
-    }
-
-    .btn-proceed {
-      background: #e60023;
-      color: white;
-      border: none;
-      width: 100%;
-      padding: 15px;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-bottom: 20px;
-      transition: background 0.3s ease;
-    }
-
-    .btn-proceed:hover {
-      background: #c5001d;
-    }
-
-    .login-link-text {
-      font-size: 14px;
-      color: #666;
-    }
-
-    .login-link-text a {
-      color: #e60023;
-      text-decoration: none;
-      font-weight: bold;
     }
     /* ----------------------------------- */
 
@@ -322,16 +301,19 @@
       padding-right: 40px;
     }
     
+    /* Perbaikan gaya untuk logo mata agar muncul dengan benar */
     .toggle-password {
       position: absolute;
       right: 10px;
       top: 50%;
       transform: translateY(-50%);
       cursor: pointer;
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       background-image: url('eye_unclicked.png');
-      background-size: cover;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
     }
 
     .toggle-password.active {
@@ -547,7 +529,7 @@
   <h2>Loading...</h2>
 </main>
 
-<!-- LANDING PAGE (Siswa & Mentor Menyatu) -->
+<!-- LANDING PAGE (Siswa & Mentor Menyatu, Langsung ke Login) -->
 <main id="landing-page" class="view">
   <div class="landing-wrapper">
     <img src="logo_zuno.png" alt="ZUNO Logo" class="landing-logo">
@@ -559,21 +541,19 @@
       <p class="role-label">Saya adalah:</p>
       
       <div class="role-cards">
-        <div class="role-card active" id="card-student" onclick="selectRole('student')">
+        <div class="role-card" id="card-student" onclick="goToLogin('student')">
           <img id="img-student" src="profile_clicked.png" alt="Student Icon">
           <h3>Student</h3>
           <p>Saya ingin belajar<br>bahasa Mandarin</p>
         </div>
         
-        <div class="role-card" id="card-mentor" onclick="selectRole('mentor')">
+        <div class="role-card" id="card-mentor" onclick="goToLogin('mentor')">
           <img id="img-mentor" src="mentor_unclicked.png" alt="Mentor Icon">
           <h3>Mentor</h3>
           <p>Saya ingin mengajar<br>bahasa Mandarin</p>
         </div>
       </div>
-      
-      <button class="btn-proceed" onclick="proceedTo('register')">Sign Up &rarr;</button>
-      <p class="login-link-text">Sudah punya akun? <a href="#" onclick="proceedTo('login')">Login di sini</a></p>
+      <!-- Tombol Proceed Dihilangkan Sesuai Request -->
     </div>
   </div>
 </main>
@@ -634,7 +614,7 @@
   </div>
 </section>
 
-<!-- LOGIN & REGISTER MENTOR -->
+<!-- LOGIN MENTOR (Tanpa Register) -->
 <section id="mentor-login-page" class="view">
   <div class="auth-card" style="border-top: 5px solid #166534;">
     <a href="#" onclick="navigateTo('landing')" style="color:#166534; text-decoration:none; font-weight:bold; display:block; margin-bottom:20px;">&lt; Back</a>
@@ -654,42 +634,10 @@
       </div>
       <button type="submit" class="btn" style="background: #166534;">Sign In as Mentor</button>
     </form>
-    <p>Ingin bergabung menjadi mentor? <a href="#" onclick="navigateTo('mentor-register')" style="color:#166534;">Daftar di sini</a></p>
+    <!-- Link Sign Up Mentor Telah Dihilangkan Sesuai Request -->
   </div>
 </section>
 
-<section id="mentor-register-page" class="view">
-  <div class="auth-card" style="border-top: 5px solid #166534;">
-    <a href="#" onclick="navigateTo('landing')" style="color:#166534; text-decoration:none; font-weight:bold; display:block; margin-bottom:20px;">&lt; Back</a>
-    <h2 style="color: #166534;">Daftar Mentor Baru</h2>
-    <form onsubmit="handleRegister(event, 'mentor', 'mentor-reg-')">
-      <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" id="mentor-reg-name" placeholder="Nama lengkap sesuai KTP" required>
-      </div>
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" id="mentor-reg-email" placeholder="Email aktif" required>
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <div class="password-wrapper">
-          <input type="password" id="mentor-reg-password" placeholder="Create a password" required>
-          <span class="toggle-password" onclick="togglePassword('mentor-reg-password', this)"></span>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Confirm Password</label>
-        <div class="password-wrapper">
-          <input type="password" id="mentor-reg-confirm-password" placeholder="Confirm your password" required>
-          <span class="toggle-password" onclick="togglePassword('mentor-reg-confirm-password', this)"></span>
-        </div>
-      </div>
-      <button type="submit" class="btn" style="background: #166534;">Daftar sebagai Mentor</button>
-    </form>
-    <p>Sudah punya akun mentor? <a href="#" onclick="navigateTo('mentor-login')" style="color:#166534;">Login di sini</a></p>
-  </div>
-</section>
 
 <!-- MAIN APP PAGES (Setelah Login) -->
 <main id="home-page" class="view">
@@ -915,7 +863,9 @@
     <span>🎁</span> Event
   </a>
   <a href="#" id="nav-profile" onclick="navigateTo('profile')">
-    <span>👤</span> Profile
+    <!-- Ikon Profile Menggunakan Gambar -->
+    <img id="nav-profile-icon" src="profile_unclicked.png" alt="Profile">
+    Profile
   </a>
 </nav>
 
@@ -953,6 +903,9 @@
   window.mentorProfile = {};
   
   window.allMentorsList = [];
+  
+  // Variabel untuk melacak role yang dipilih saat login
+  window.loggingInRole = null; 
 
   let unsubSnapshot = null;
   let unsubMentorSnapshot = null;
@@ -1021,35 +974,12 @@
     document.getElementById('welcome-text').innerText = "Welcome, " + display + suffix;
   };
 
-  // --- LOGIC ROLE SELECTION DI LANDING PAGE ---
-  window.selectedRole = 'student'; // Default
-
-  window.selectRole = (role) => {
-    window.selectedRole = role;
-    
-    // Update card styling
-    document.getElementById('card-student').classList.remove('active');
-    document.getElementById('card-mentor').classList.remove('active');
-    document.getElementById('card-' + role).classList.add('active');
-    
-    // Update icons
-    const imgStudent = document.getElementById('img-student');
-    const imgMentor = document.getElementById('img-mentor');
-    
+  // --- LOGIC ROLE SELECTION (LANGSUNG KE LOGIN) ---
+  window.goToLogin = (role) => {
     if (role === 'student') {
-        imgStudent.src = 'profile_clicked.png';
-        imgMentor.src = 'mentor_unclicked.png';
+        window.navigateTo('login');
     } else {
-        imgStudent.src = 'profile_unclicked.png';
-        imgMentor.src = 'mentor_clicked.png';
-    }
-  };
-
-  window.proceedTo = (action) => {
-    if (action === 'register') {
-      window.navigateTo(window.selectedRole === 'student' ? 'register' : 'mentor-register');
-    } else if (action === 'login') {
-      window.navigateTo(window.selectedRole === 'student' ? 'login' : 'mentor-login');
+        window.navigateTo('mentor-login');
     }
   };
 
@@ -1069,11 +999,19 @@
       document.getElementById(id).className = '';
     });
 
-    const isPublicPage = ['landing', 'login', 'register', 'mentor-login', 'mentor-register'].includes(page);
-    footer.style.display = isPublicPage && page !== 'mentor-login' && page !== 'mentor-register' && page !== 'landing' ? 'block' : 'none';
+    // Menangani ikon profil di bottom nav agar switch image
+    const profileIcon = document.getElementById('nav-profile-icon');
+    if (page === 'profile' || page === 'edit-profile' || page === 'vouchers' || page === 'mentor-dashboard') {
+        profileIcon.src = 'profile_clicked.png';
+    } else {
+        profileIcon.src = 'profile_unclicked.png';
+    }
+
+    const isPublicPage = ['landing', 'login', 'register', 'mentor-login'].includes(page);
+    footer.style.display = isPublicPage && page !== 'mentor-login' && page !== 'landing' ? 'block' : 'none';
     bottomNav.className = isPublicPage || page === 'loading' ? 'bottom-nav' : 'bottom-nav active';
 
-    // Sembunyikan header atas secara total khusus di landing page agar persis desain
+    // Sembunyikan header atas secara total khusus di landing page
     if (page === 'landing' || page === 'loading') {
       header.style.display = 'none';
     } else {
@@ -1086,7 +1024,7 @@
     else if (page === 'landing') {
       document.getElementById('landing-page').className = 'view active-block';
     } 
-    else if (page === 'login' || page === 'register' || page === 'mentor-login' || page === 'mentor-register') {
+    else if (page === 'login' || page === 'register' || page === 'mentor-login') {
       document.getElementById(page + '-page').className = 'view active-flex';
       topNav.style.display = page.includes('mentor') ? 'none' : 'flex';
     } 
@@ -1278,6 +1216,7 @@
       window.currentUserUid = user.uid;
       window.currentUserEmail = user.email;
       const localData = localStorage.getItem('zuno_data_' + user.uid);
+      
       if (localData) {
         const parsed = JSON.parse(localData);
         window.userProfile = parsed.profile || { fullName: user.displayName || "" };
@@ -1285,6 +1224,15 @@
         window.vouchers = parsed.vouchers || [];
         window.eggQuota = parsed.quota !== undefined ? parsed.quota : 2;
       }
+      
+      // Deteksi jika user baru saja login dari form tertentu dan timpa rolenya
+      if (window.loggingInRole) {
+          window.userRole = window.loggingInRole;
+          window.loggingInRole = null; // Reset setelah digunakan
+          // Simpan role baru ke dalam database secara otomatis
+          set(ref(db, 'users/' + user.uid + '/role'), window.userRole).catch(()=>{});
+      }
+
       window.updateWelcomeText();
       window.updateEggUI();
       window.updateVoucherList();
@@ -1332,6 +1280,7 @@
       window.mentorProfile = {};
       window.eggQuota = 2;
       window.vouchers = [];
+      window.loggingInRole = null;
       
       if (unsubSnapshot) { unsubSnapshot(); unsubSnapshot = null; }
       if (unsubMentorSnapshot) { unsubMentorSnapshot(); unsubMentorSnapshot = null; }
@@ -1389,6 +1338,10 @@
     event.preventDefault();
     const email = document.getElementById(emailId).value;
     const password = document.getElementById(passwordId).value;
+    
+    // Simpan role di memori sementara, agar onAuthStateChanged tahu role mana yang harus diaktifkan untuk email ini
+    window.loggingInRole = role;
+
     signInWithEmailAndPassword(auth, email, password).catch((error) => { alert(error.message); });
   };
 
